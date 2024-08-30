@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 
 @AllArgsConstructor
@@ -22,6 +23,9 @@ public class Session {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "expires_at")
-    private DateFormat expiresAt;
+    @Column(name = "session_id", nullable = false, unique = true)
+    private String sessionToken;
+
+    @Column(name = "expires_at", nullable = false)
+    private Timestamp expiresAt;
 }

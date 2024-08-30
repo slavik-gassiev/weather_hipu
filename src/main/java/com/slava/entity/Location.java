@@ -22,10 +22,12 @@ public class Location {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "location_name")
+    @Column(name = "location_name", nullable = false)
     private String locationName;
 
-    private Long Longitude;
+    @Column(nullable = false)
+    private Double  Longitude;
 
-    private Long Latitude;
+    @Column(nullable = false)
+    private Double  Latitude;
 }
