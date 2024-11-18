@@ -87,3 +87,5 @@ Q.idea/sonarlint/securityhotspotstore/3/0/304b7acf17daa80f3e1499c81dac4eb0e71b86
 Q.idea/sonarlint/securityhotspotstore/9/f/9fe84ebb15faf917b7def6236dba604453cc61e0,b\b\bbf202272a96de5cd6b6828ffdc55fb3ce45289c
 C
 web/WEB-INF/web.xml,c\d\cdcc12da5c4054f6995aab32914d7e0243194c05
+h
+8src/main/java/com/slava/repositories/UserRepository.java,3\f\3ffd08a11864fc3840ea92421a19d62888538117
