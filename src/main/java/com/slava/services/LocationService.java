@@ -24,6 +24,6 @@ public class LocationService {
     }
 
     public List<Location> getUserLocations(User user) {
-        return locationRepository.getLocationByUser(user);
+        return locationRepository.getLocationsByUser(user);
     }
 }

@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
-    List<Location> getLocationByUser(User user);
+    List<Location> getLocationsByUser(User user);
 }

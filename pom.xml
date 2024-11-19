@@ -76,18 +76,17 @@
         <artifactId>spring-orm</artifactId>
         <version>${spring.version}</version>
     </dependency>
-    <!-- h2database -->
+    <!-- postgresql -->
     <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <version>1.4.197</version>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>42.7.4</version>
     </dependency>
-    <!-- commons-dbcp2 -->
+    <!-- flyway-core -->
     <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-dbcp2</artifactId>
-        <version>2.7.0</version>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-core</artifactId>
+        <version>10.21.0</version>
     </dependency>
-
 </dependencies>
 </project>

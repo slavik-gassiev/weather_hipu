@@ -89,3 +89,15 @@ C
 web/WEB-INF/web.xml,c\d\cdcc12da5c4054f6995aab32914d7e0243194c05
 h
 8src/main/java/com/slava/repositories/UserRepository.java,3\f\3ffd08a11864fc3840ea92421a19d62888538117
+k
+;src/main/java/com/slava/repositories/SessionRepository.java,a\6\a643f8ff3fca35ad79f89795463cb4ae312473b5
+l
+<src/main/java/com/slava/repositories/LocationRepository.java,6\8\680e9c576bef0d360bf94619166b2f38176a4156
+e
+5src/main/java/com/slava/services/LocationService.java,e\0\e030cd8bafe170124c117b2de065171c35fe4238
+i
+9src/main/java/com/slava/сontrollers/WeverController.java,9\b\9b2a78cecb4897cf13720f83a1a615a1634105a4
+k
+;src/main/java/com/slava/repositories/WeatherAPIService.java,1\6\16aded2da5badb39897f30552ce06e62a703d33c
+\
+,src/main/java/com/slava/TestHttpRequest.http,8\8\88c65954e323587f379bc9533ad3438157fcdc22
