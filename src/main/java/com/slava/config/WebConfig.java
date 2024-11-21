@@ -49,7 +49,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         resolver.setApplicationContext(applicationContext);
         resolver.setPrefix("/WEB-INF/view/");
-        resolver.setSuffix(".jsp");
+        resolver.setSuffix(".html");
         resolver.setCharacterEncoding("UTF-8");
 
         return resolver;
