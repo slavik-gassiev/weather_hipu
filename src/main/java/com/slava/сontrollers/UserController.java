@@ -1,16 +1,21 @@
 package com.slava.сontrollers;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.slava.entities.Location;
 import com.slava.entities.User;
 import com.slava.model.Weather;
 import com.slava.services.LocationService;
 import com.slava.services.SessionService;
 import com.slava.services.WeatherService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -41,6 +46,25 @@ public class UserController {
         model.addAttribute("weathers", weathers);
         model.addAttribute("login", login);
         return "home";
+    }
+
+    @GetMapping("/login")
+    public String login(@CookieValue(value = "session_id", defaultValue = "") String sessionId, Model model) {
+        if (!sessionId.isEmpty()) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("user", new User());
+        return "/login";
+    }
+
+    @PostMapping("/login")
+    public String login(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "/login";
+        }
+
+        return "/";
     }
 
 }

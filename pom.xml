@@ -20,6 +20,12 @@
         <artifactId>hibernate-core</artifactId>
         <version>6.6.1.Final</version>
     </dependency>
+    <!-- hibernate-validator -->
+    <dependency>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>8.0.1.Final</version>
+    </dependency>
     <!-- lombok -->
     <dependency>
         <groupId>org.projectlombok</groupId>
@@ -75,6 +81,12 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-orm</artifactId>
         <version>${spring.version}</version>
+    </dependency>
+    <!-- spring-security-core -->
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+        <version>6.4.1</version>
     </dependency>
     <!-- postgresql -->
     <dependency>
