@@ -5,7 +5,7 @@ import com.slava.entities.User;
 import com.slava.model.Weather;
 import com.slava.services.LocationService;
 import com.slava.services.SessionService;
-import com.slava.services.WeatherAPIService;
+import com.slava.services.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +19,13 @@ public class UserController {
 
     private final SessionService sessionService;
     private final LocationService locationService;
-    private final WeatherAPIService weatherAPIService;
+    private final WeatherService weatherService;
 
     @Autowired
-    public UserController(SessionService sessionService, LocationService locationService, WeatherAPIService weatherAPIService) {
+    public UserController(SessionService sessionService, LocationService locationService, WeatherService weatherService) {
         this.sessionService = sessionService;
         this.locationService = locationService;
-        this.weatherAPIService = weatherAPIService;
+        this.weatherService = weatherService;
     }
 
     @GetMapping("/")
@@ -36,7 +36,7 @@ public class UserController {
 
         User user = sessionService.getUserBySession(sessionId);
         List<Location> locations = locationService.getUserLocations(user);
-        List<Weather>  weathers = weatherAPIService.getWeathersByLocations(locations);
+        List<Weather>  weathers = weatherService.getWeathersByLocations(locations);
         String login = user.getLogin();
         model.addAttribute("weathers", weathers);
         model.addAttribute("login", login);

@@ -2,7 +2,7 @@ package com.slava.services;
 
 import com.slava.entities.Location;
 import com.slava.entities.User;
-import com.slava.repositories.LocationRepository;
+import com.slava.repositories.ILocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,11 +11,11 @@ import java.util.List;
 
 @Service
 public class LocationService {
-    LocationRepository locationRepository;
+    ILocationRepository locationRepository;
 
     @Autowired
-    public LocationService(LocationRepository locationRepository) {
-        this.locationRepository = locationRepository;
+    public LocationService(ILocationRepository ILocationRepository) {
+        this.locationRepository = ILocationRepository;
     }
 
     @Transactional

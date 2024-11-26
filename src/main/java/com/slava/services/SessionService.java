@@ -2,9 +2,8 @@ package com.slava.services;
 
 import com.slava.entities.Session;
 import com.slava.entities.User;
-import com.slava.repositories.SessionRepository;
+import com.slava.repositories.ISessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -12,11 +11,11 @@ import java.util.UUID;
 @Service
 public class SessionService{
 
-    SessionRepository sessionRepository;
+    ISessionRepository sessionRepository;
 
     @Autowired
-    public SessionService(SessionRepository sessionRepository) {
-        this.sessionRepository = sessionRepository;
+    public SessionService(ISessionRepository ISessionRepository) {
+        this.sessionRepository = ISessionRepository;
     }
 
     public User getUserBySession(String sessionId) {
