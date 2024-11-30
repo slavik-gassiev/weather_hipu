@@ -5,6 +5,7 @@ import com.slava.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -24,6 +25,20 @@ public class UserService {
     public Optional<User> findByLoginAndPassword(String login, String password) {
         Optional<User> user = findByLogin(login);
         return user.filter(u -> BCrypt.checkpw(password, u.getPassword()));
+    }
+
+    @Transactional
+    public Long saveUser(String login, String password) {
+        return userRepository.saveUser(login, password);
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    public User saveAndGetUser(String login, String password) {
+        Long id = saveUser(login, password);
+        return findById(id).get();
     }
 
 }

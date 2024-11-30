@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface IUserRepository extends JpaRepository<User, Long> {
     Optional<User> findByLogin(String login);
+
+    Long saveUser(String login, String password);
 }

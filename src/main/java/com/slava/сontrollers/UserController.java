@@ -1,12 +1,14 @@
 package com.slava.сontrollers;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.slava.entities.Location;
 import com.slava.entities.User;
 import com.slava.model.Weather;
 import com.slava.services.LocationService;
 import com.slava.services.SessionService;
+import com.slava.services.UserService;
 import com.slava.services.WeatherService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,12 +27,14 @@ public class UserController {
     private final SessionService sessionService;
     private final LocationService locationService;
     private final WeatherService weatherService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(SessionService sessionService, LocationService locationService, WeatherService weatherService) {
+    public UserController(SessionService sessionService, LocationService locationService, WeatherService weatherService, UserService userService) {
         this.sessionService = sessionService;
         this.locationService = locationService;
         this.weatherService = weatherService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -59,10 +63,19 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    public String login(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             return "/login";
         }
+
+        if (userService.findByLogin(user.getLogin()).isPresent()) {
+            return "/login";
+        }
+
+        User createdUser = userService.saveAndGetUser(user.getLogin(), user.getPassword());
+        String userUuid = sessionService.saveSession(createdUser).toString();
+        Cookie cookie = new Cookie("session_id", userUuid);
+        response.addCookie(cookie);
 
         return "/";
     }

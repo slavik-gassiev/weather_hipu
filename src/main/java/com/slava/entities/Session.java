@@ -29,4 +29,9 @@ public class Session {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Session (User user, Timestamp expireAt) {
+        this.user = user;
+        this.expireAt = expireAt;
+    }
 }
