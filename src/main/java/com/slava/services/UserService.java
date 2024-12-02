@@ -37,7 +37,8 @@ public class UserService {
     }
 
     public User saveAndGetUser(String login, String password) {
-        Long id = saveUser(login, password);
+        String securedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        Long id = saveUser(login, securedPassword);
         return findById(id).get();
     }
 
