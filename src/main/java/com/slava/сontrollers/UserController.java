@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -65,11 +66,42 @@ public class UserController {
     @PostMapping("/login")
     public String login(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
-            return "/login";
+            return "redirect:/login";
+        }
+
+        if (userService.findByLogin(user.getLogin()).isEmpty()) {
+            return "redirect:/login";
+        }
+
+        Optional<User> foundUser = userService.findByLoginAndPassword(user.getLogin(), user.getPassword());
+        if (foundUser.isEmpty()) {
+            return "redirect:/login";
+        }
+        String userUuid = sessionService.saveSession(foundUser.get()).toString();
+        Cookie cookie = new Cookie("session_id", userUuid);
+        response.addCookie(cookie);
+
+        return "/";
+    }
+
+    @GetMapping("/authorization")
+    public String authorization(@CookieValue(value = "session_id", defaultValue = "") String sessionId, Model model) {
+        if (!sessionId.isEmpty()) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("user", new User());
+        return "/authorization";
+    }
+
+    @PostMapping("/authorization")
+    public String authorization(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpServletResponse response) {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/login";
         }
 
         if (userService.findByLogin(user.getLogin()).isPresent()) {
-            return "/login";
+            return "redirect:/login";
         }
 
         User createdUser = userService.saveAndGetUser(user.getLogin(), user.getPassword());
@@ -80,4 +112,12 @@ public class UserController {
         return "/";
     }
 
+    public String logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("session_id", "");
+        response.addCookie(cookie);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
+        return "/logout";
+    }
 }
