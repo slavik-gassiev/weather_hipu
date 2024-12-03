@@ -4,6 +4,7 @@ import com.slava.dao.IWeatherDao;
 import com.slava.dao.WeatherDao;
 import com.slava.entities.Location;
 import com.slava.model.Weather;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,13 +14,24 @@ import java.util.stream.Collectors;
 @Service
 public class WeatherService {
 
-    IWeatherDao weatherDao = new WeatherDao();
+    private final WeatherDao weatherDao;
 
-    public List<Weather> getWeathersByLocations(List<Location> locations) {
+    @Autowired
+    public WeatherService(WeatherDao weatherDao) {
+        this.weatherDao = weatherDao;
+    }
 
-        return (List<Weather>) locations.stream()
-                .map(location -> weatherDao.getWeather(location))
-                .flatMap(Optional::stream)
-                .collect(Collectors.toList());
+    public Weather getWeather(Location location) {
+        return weatherDao.getWeather(location)
+                .orElseThrow(() -> new RuntimeException("Weather not found for location: " + location.getName()));
+    }
+
+    public Weather searchWeather(String locationName) {
+        Location location = new Location();
+        location.setName(locationName);
+
+        return weatherDao.searchWeather(location)
+                .orElseThrow(() -> new RuntimeException("Weather not found for location name: " + locationName));
     }
 }
+

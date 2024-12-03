@@ -1,23 +1,20 @@
 package com.slava.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@Data
+@Component
+@Getter
+@NoArgsConstructor
 public class OpenWeatherAPI {
 
-    private static OpenWeatherAPI INSTANCE;
-    private final String API_SERVICE = "";
+    @Value("${openweather.api.service}")
+    private String apiService;
 
-    private final String APP_ID = "";
+    @Value("${openweather.api.app-id}")
+    private String appId;
 
-    private OpenWeatherAPI() {
-    }
-
-    public synchronized static OpenWeatherAPI getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new OpenWeatherAPI();
-        }
-
-        return INSTANCE;
-    }
 }

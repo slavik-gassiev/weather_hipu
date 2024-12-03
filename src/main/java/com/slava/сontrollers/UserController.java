@@ -45,7 +45,7 @@ public class UserController {
         }
 
         User user = sessionService.getUserBySession(sessionId);
-        List<Location> locations = locationService.getUserLocations(user);
+        List<Location> locations = locationService.getUserLocations(user.getId());
         List<Weather>  weathers = weatherService.getWeathersByLocations(locations);
         String login = user.getLogin();
         model.addAttribute("weathers", weathers);

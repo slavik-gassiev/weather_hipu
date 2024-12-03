@@ -23,7 +23,7 @@ public class LocationService {
         locationRepository.save(location);
     }
 
-    public List<Location> getUserLocations(User user) {
-        return locationRepository.getLocationsByUser(user);
+    public List<Location> getUserLocations(Long userId) {
+        return locationRepository.getLocationsByUser(userId);
     }
 }
