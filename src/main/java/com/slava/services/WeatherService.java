@@ -33,5 +33,13 @@ public class WeatherService {
         return weatherDao.searchWeather(location)
                 .orElseThrow(() -> new RuntimeException("Weather not found for location name: " + locationName));
     }
+
+    public List<Weather> getWeathersByLocations(List<Location> locations) {
+
+        return (List<Weather>) locations.stream()
+                .map(weatherDao::getWeather)
+                .flatMap(Optional::stream)
+                .collect(Collectors.toList());
+    }
 }
 

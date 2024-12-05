@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Weather {
    private String name;
+   private Double lat;
+   private Double lon;
    private int temperature;
    private int humidity;
    private int windSpeed;

@@ -1,7 +1,6 @@
 package com.slava.services;
 
 import com.slava.entities.Location;
-import com.slava.entities.User;
 import com.slava.repositories.ILocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,18 @@ public class LocationService {
     }
 
     @Transactional
-    public void save(Location location) {
+    public void saveLocation(Location location) {
         locationRepository.save(location);
+    }
+
+    @Transactional
+    public void saveLocation(String name, Double lat, Double lon) {
+        locationRepository.save(new Location(name, lat, lon));
+    }
+
+    @Transactional
+    public void deleteLocation(Long locationId) {
+        locationRepository.deleteById(locationId);
     }
 
     public List<Location> getUserLocations(Long userId) {

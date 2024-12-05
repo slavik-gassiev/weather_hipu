@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-@Getter
 @NoArgsConstructor
 public class OpenWeatherAPI {
 
@@ -17,4 +16,10 @@ public class OpenWeatherAPI {
     @Value("${openweather.api.app-id}")
     private String appId;
 
+    public String getAPP_ID() {
+        return appId;
+    }
+    public String getAPI_SERVICE() {
+        return apiService;
+    }
 }
