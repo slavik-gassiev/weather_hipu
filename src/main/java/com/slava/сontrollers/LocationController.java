@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class LocationController {
     private LocationService locationService;
@@ -36,24 +38,25 @@ public class LocationController {
     }
 
     @PostMapping("/search_location")
-    public String searchLocation(@ModelAttribute("location") @Valid Location location, BindingResult bindingResult,
+    public String searchLocation(@RequestParam @Valid String cityName, BindingResult bindingResult,
                                  HttpServletResponse response, Model model) {
         if (bindingResult.hasErrors()) {
             return "redirect:/search_location";
         }
-        if (location.getName().isBlank() || location.getName().isEmpty()) {
+        if (cityName.isBlank() || cityName.isEmpty()) {
             throw new RuntimeException("You wrote empty location");
         }
-        Weather weather = weatherService.searchWeather(location.getName());
+
+        List<Weather> weather = weatherService.searchWeather(cityName);
         model.addAttribute("weather", weather);
-        return "seatch";
+        return "search";
     }
 
     @PutMapping("/save_location")
     @ResponseBody
     public ResponseEntity<String> saveLocation(@RequestBody Weather weather) {
         try {
-            locationService.saveLocation(weather.getName(), weather.getLat(), weather.getLon());
+            locationService.saveLocation(weather.getCoordinates().getName(), weather.getCoordinates().getLat(), weather.getCoordinates().getLon());
             return ResponseEntity.ok("Location saved successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

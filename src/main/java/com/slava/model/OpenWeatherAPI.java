@@ -1,7 +1,5 @@
 package com.slava.model;
 
-import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -9,9 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 @NoArgsConstructor
 public class OpenWeatherAPI {
-
-    @Value("${openweather.api.service}")
-    private String apiService;
+    @Value("${openweather.cw.api.service}")
+    private String apiCurrentWeatherService;
+    @Value("${openweather.geocoding.api.service}")
+    private String apiGeocoding;
 
     @Value("${openweather.api.app-id}")
     private String appId;
@@ -19,7 +18,11 @@ public class OpenWeatherAPI {
     public String getAPP_ID() {
         return appId;
     }
-    public String getAPI_SERVICE() {
-        return apiService;
+    public String getApiCurrentWeatherService() {
+        return apiCurrentWeatherService;
+    }
+
+    public String getApiGeocoding() {
+        return apiGeocoding;
     }
 }
