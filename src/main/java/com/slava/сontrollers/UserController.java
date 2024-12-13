@@ -38,7 +38,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String mainHomePage(@CookieValue(value = "session_id", defaultValue = "") String sessionId, Model model) {
         if (sessionId.isEmpty()){
             return "redirect:/login";
@@ -56,7 +56,7 @@ public class UserController {
     @GetMapping("/login")
     public String login(@CookieValue(value = "session_id", defaultValue = "") String sessionId, Model model) {
         if (!sessionId.isEmpty()) {
-            return "redirect:/";
+            return "redirect:/home";
         }
 
         model.addAttribute("user", new User());
@@ -66,52 +66,56 @@ public class UserController {
     @PostMapping("/login")
     public String login(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/login";
+            return "/login";
         }
 
         if (userService.findByLogin(user.getLogin()).isEmpty()) {
-            return "redirect:/login";
+            bindingResult.rejectValue("login", "error.user", "Данный логин не существует. Выберите другой.");
+            return "/login";
         }
 
         Optional<User> foundUser = userService.findByLoginAndPassword(user.getLogin(), user.getPassword());
         if (foundUser.isEmpty()) {
-            return "redirect:/login";
+            bindingResult.rejectValue("login", "error.user", "Вы ввели неверный логин или пароль.");
+            return "/login";
         }
         String userUuid = sessionService.saveSession(foundUser.get()).toString();
         Cookie cookie = new Cookie("session_id", userUuid);
         response.addCookie(cookie);
 
-        return "/";
+        return "redirect:/home";
     }
 
-    @GetMapping("/authorization")
-    public String authorization(@CookieValue(value = "session_id", defaultValue = "") String sessionId, Model model) {
+    @GetMapping("/registration")
+    public String registration(@CookieValue(value = "session_id", defaultValue = "") String sessionId, Model model) {
         if (!sessionId.isEmpty()) {
-            return "redirect:/";
+            return "redirect:/home";
         }
 
         model.addAttribute("user", new User());
-        return "/authorization";
+        return "registration";
     }
 
-    @PostMapping("/authorization")
-    public String authorization(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpServletResponse response) {
+    @PostMapping("/registration")
+    public String registration(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/login";
+            return "/registration";
         }
 
         if (userService.findByLogin(user.getLogin()).isPresent()) {
-            return "redirect:/login";
+            bindingResult.rejectValue("login", "error.user", "Данный логин уже занят. Выберите другой.");
+            return "/registration";
         }
 
-        User createdUser = userService.saveAndGetUser(user.getLogin(), user.getPassword());
+        User createdUser = userService.saveAndGetUser(user);
         String userUuid = sessionService.saveSession(createdUser).toString();
         Cookie cookie = new Cookie("session_id", userUuid);
         response.addCookie(cookie);
 
-        return "/";
+        return "/home";
     }
 
+    @GetMapping("/logout")
     public String logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("session_id", "");
         response.addCookie(cookie);

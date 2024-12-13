@@ -28,17 +28,18 @@ public class UserService {
     }
 
     @Transactional
-    public Long saveUser(String login, String password) {
-        return userRepository.saveUser(login, password);
+    public Long saveUser(User user) {
+        return userRepository.save(user).getId();
     }
 
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 
-    public User saveAndGetUser(String login, String password) {
-        String securedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
-        Long id = saveUser(login, securedPassword);
+    public User saveAndGetUser(User user) {
+        String securedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12));
+        user.setPassword(securedPassword);
+        Long id = saveUser(user);
         return findById(id).get();
     }
 

@@ -32,6 +32,7 @@ public class SessionService{
     public UUID saveSession(User user) {
         Timestamp expiresAt = new Timestamp(System.currentTimeMillis() + SESSION_LIFE_TIME);
         Session session = new Session(user, expiresAt);
+        sessionRepository.save(session);
         return session.getId();
     }
 }

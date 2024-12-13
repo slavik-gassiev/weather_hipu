@@ -33,6 +33,6 @@ public class LocationService {
     }
 
     public List<Location> getUserLocations(Long userId) {
-        return locationRepository.getLocationsByUser(userId);
+        return locationRepository.getLocationsByUserId(userId);
     }
 }
