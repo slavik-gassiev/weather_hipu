@@ -99,3 +99,11 @@ W
 'src/main/webapp/WEB-INF/view/login.html,6\7\6743a55c8b510928836a87d5e1e7f5219205dcd8
 V
 &src/main/webapp/WEB-INF/view/home.html,6\2\6205cd06a07f16bbd8a3d1d31f9f5a03f92490ba
+O
+src/main/webapp/WEB-INF/web.xml,2\e\2e22b6edd746fa3dc40ad7276c87c8d87d72a392
+g
+7src/main/webapp/WEB-INF/resources/css/bootstrap.min.css,b\0\b0673382d12621dc2af0a44f2db484d59d46d32c
+X
+(src/main/webapp/WEB-INF/view/search.html,a\6\a6856afa3357472841e065bba0465daa8059c41e
+^
+.src/main/java/com/slava/model/Coordinates.java,a\1\a178a15ba634f3b60c0128553bea78a9f8f7cda5

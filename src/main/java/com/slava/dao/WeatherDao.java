@@ -36,10 +36,13 @@ public class WeatherDao implements IWeatherDao<Weather> {
                 .queryParam("lon", longitude)
                 .queryParam("appid", openWeatherAPI.getAPP_ID())
                 .queryParam("units", "metric")
+                .queryParam("lang", "ru")
                 .encode()
                 .toUriString();
 
-        return fetchWeather(urlencoded);
+        Weather weather = restTemplate.getForObject(urlencoded, Weather.class);
+        weather.getCoordinates().setName(weather.getName());
+        return Optional.ofNullable(weather);
     }
 
     @Override
@@ -53,21 +56,10 @@ public class WeatherDao implements IWeatherDao<Weather> {
 
         ResponseEntity<Coordinates[]> geoResponse = restTemplate.getForEntity(urlencoded, Coordinates[].class);
         List<Coordinates> coordinates = List.of(geoResponse.getBody());
-        List<Optional<Weather>> weathers = coordinates.stream()
+        List<Optional<Weather>> weathers =  coordinates.stream()
                 .map(c -> getWeather(c.getLat().toString(), c.getLon().toString()))
                 .collect(Collectors.toList());
 
         return weathers;
     }
-
-    private Optional<Weather> fetchWeather(String url) {
-        try {
-            Weather weather = restTemplate.getForObject(url, Weather.class);
-            return Optional.ofNullable(weather);
-        } catch (Exception e) {
-            System.err.println("Error fetching weather data: " + e.getMessage());
-            return Optional.empty();
-        }
-    }
-
 }

@@ -1,6 +1,7 @@
 package com.slava.сontrollers;
 
 import com.slava.entities.Location;
+import com.slava.model.Coordinates;
 import com.slava.model.Weather;
 import com.slava.services.LocationService;
 import com.slava.services.WeatherService;
@@ -27,36 +28,21 @@ public class LocationController {
         this.weatherService = weatherService;
     }
 
-    @GetMapping("/search_location")
-    public String searchLocation(@CookieValue(value = "session_id", defaultValue = "") String sessionId, Model model) {
-        if (sessionId.isEmpty()) {
-            return "/login";
-        }
-
-        model.addAttribute("toSearchLocation", new Location());
-        return "";
-    }
-
     @PostMapping("/search_location")
-    public String searchLocation(@RequestParam @Valid String cityName, BindingResult bindingResult,
-                                 HttpServletResponse response, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "redirect:/search_location";
-        }
-        if (cityName.isBlank() || cityName.isEmpty()) {
-            throw new RuntimeException("You wrote empty location");
-        }
+    public String searchLocation(@RequestParam(name = "cityName") String cityName,
+                                 HttpServletResponse response,
+                                 Model model) {
 
-        List<Weather> weather = weatherService.searchWeather(cityName);
-        model.addAttribute("weather", weather);
+        List<Weather> weathers = weatherService.searchWeather(cityName);
+        model.addAttribute("weathers", weathers);
         return "search";
     }
 
     @PutMapping("/save_location")
     @ResponseBody
-    public ResponseEntity<String> saveLocation(@RequestBody Weather weather) {
+    public ResponseEntity<String> saveLocation(@RequestBody Coordinates coordinates) {
         try {
-            locationService.saveLocation(weather.getCoordinates().getName(), weather.getCoordinates().getLat(), weather.getCoordinates().getLon());
+            locationService.saveLocation(coordinates.getName(), coordinates.getLat(), coordinates.getLon());
             return ResponseEntity.ok("Location saved successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
