@@ -25,16 +25,44 @@
 </header>
 
 <main class="container mt-4">
-    <h2>Ваши локации:</h2>
-    <div th:if="${weathers != null && weathers.size() > 0}">
-        <ul class="list-group">
-            <li class="list-group-item d-flex justify-content-between align-items-center" th:each="weather : ${weathers}">
-                <span th:text="${weather.locationName} + ' - ' + weather.temperature + '°C'"></span>
-                <a th:href="@{'/locations/delete/' + ${weather.locationId}}" class="btn btn-danger btn-sm">Удалить</a>
-            </li>
-        </ul>
+    <h2 class="mb-4">Найдено:</h2>
+    <div class="row" th:if="${weathers != null && weathers.size() > 0}">
+        <div class="col-md-4 mb-4" th:each="weather : ${weathers}">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <!-- Иконка погоды -->
+                    <img th:src="'http://openweathermap.org/img/wn/' + ${weather.weatherDetails[0].icon} + '@2x.png'"
+                         alt="Weather icon"
+                         class="mb-3"
+                         style="width: 80px; height: 80px;">
+
+                    <!-- Информация о погоде -->
+                    <h5 th:text="${weather.name}"></h5>
+                    <p class="mb-1">
+                        Температура: <span th:text="${weather.parameters.temp} + ' °C'"></span>
+                    </p>
+                    <p class="mb-1">
+                        Влажность: <span th:text="${weather.parameters.humidity} + '%'"></span>
+                    </p>
+                    <p class="mb-1">
+                        Скорость ветра: <span th:text="${weather.wind.speed} + ' m/s'"></span>
+                    </p>
+                    <p class="mb-1">
+                        Состояние: <span th:text="${weather.weatherDetails[0].main}"></span>
+                    </p>
+                    <p>
+                        Описание: <span th:text="${weather.weatherDetails[0].description}"></span>
+                    </p>
+                </div>
+                <div class="card-footer p-0">
+                    <a th:href="@{'/locations/save/' + ${weather.coordinates}}"
+                       class="btn btn-primary btn-block rounded-0"
+                       style="width: 100%;">Удалить погоду</a>
+                </div>
+            </div>
+        </div>
     </div>
-    <p th:if="${weathers == null || weathers.size() == 0}">Список локаций пуст.</p>
+    <p th:if="${weathers == null || weathers.size() == 0}">Ничего не найдено.</p>
 </main>
 </body>
 </html>

@@ -1,18 +1,15 @@
 package com.slava.сontrollers;
 
-import com.slava.entities.Location;
+import com.slava.entities.User;
 import com.slava.model.Coordinates;
 import com.slava.model.Weather;
 import com.slava.services.LocationService;
+import com.slava.services.SessionService;
 import com.slava.services.WeatherService;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,45 +17,55 @@ import java.util.List;
 @Controller
 public class LocationController {
     private LocationService locationService;
+    private SessionService sessionService;
     private WeatherService weatherService;
 
     @Autowired
-    public LocationController(LocationService locationService, WeatherService weatherService) {
+    public LocationController(LocationService locationService, SessionService sessionService, WeatherService weatherService) {
         this.locationService = locationService;
+        this.sessionService = sessionService;
         this.weatherService = weatherService;
     }
 
     @PostMapping("/search_location")
-    public String searchLocation(@RequestParam(name = "cityName") String cityName,
+    public String searchLocation(@CookieValue(value = "session_id", defaultValue = "") String sessionId, @RequestParam(name = "cityName") String cityName,
                                  HttpServletResponse response,
                                  Model model) {
+        if (sessionId.isEmpty()){
+            return "redirect:/login";
+        }
 
         List<Weather> weathers = weatherService.searchWeather(cityName);
         model.addAttribute("weathers", weathers);
         return "search";
     }
 
-    @PutMapping("/save_location")
-    @ResponseBody
-    public ResponseEntity<String> saveLocation(@RequestBody Coordinates coordinates) {
+    @PostMapping("/save_location")
+    public String saveLocation(@CookieValue(value = "session_id", defaultValue = "") String sessionId, @ModelAttribute("coordinates") Coordinates coordinates) {
+        if (sessionId.isEmpty()){
+            return "/login";
+        }
+
         try {
-            locationService.saveLocation(coordinates.getName(), coordinates.getLat(), coordinates.getLon());
-            return ResponseEntity.ok("Location saved successfully");
+            User userBySession = sessionService.getUserBySessionId(sessionId);
+            locationService.saveLocation(coordinates, userBySession);
+            return "redirect:/home";
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error saving location");
+            throw new RuntimeException("Error saving location");
         }
     }
 
-    @DeleteMapping("/delete_location")
-    @ResponseBody
-    public ResponseEntity<String> deleteLocation(@RequestParam("id") Long id) {
+    @PostMapping("/delete_location")
+    public String deleteLocation(@CookieValue(value = "session_id", defaultValue = "") String sessionId, @RequestParam("id") Long id) {
+        if (sessionId.isEmpty()){
+            return "/login";
+        }
+
         try {
             locationService.deleteLocation(id);
-            return ResponseEntity.ok("Location deleted successfully");
+            return "redirect:/home";
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error deleting location");
+            throw new RuntimeException("Error saving location");
         }
     }
 }

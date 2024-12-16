@@ -47,9 +47,12 @@
                     </p>
                 </div>
                 <div class="card-footer p-0">
-                    <a th:href="@{'/locations/save/' + ${weather.coordinates}}"
-                       class="btn btn-primary btn-block rounded-0"
-                       style="width: 100%;">Добавить погоду</a>
+                    <form th:action="@{/save_location}" method="post">
+                        <input type="hidden" name="name" th:value="${weather.name}" />
+                        <input type="hidden" name="lat" th:value="${weather.coordinates.lat}" />
+                        <input type="hidden" name="lon" th:value="${weather.coordinates.lon}" />
+                        <button type="submit" class="btn btn-primary btn-block rounded-0" style="width: 100%;">Сохранить</button>
+                    </form>
                 </div>
             </div>
         </div>

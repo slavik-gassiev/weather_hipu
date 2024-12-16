@@ -107,3 +107,9 @@ X
 (src/main/webapp/WEB-INF/view/search.html,a\6\a6856afa3357472841e065bba0465daa8059c41e
 ^
 .src/main/java/com/slava/model/Coordinates.java,a\1\a178a15ba634f3b60c0128553bea78a9f8f7cda5
+]
+-src/main/java/com/slava/model/Parameters.java,5\c\5cda614a3da826d41b1d0dad8b77302e7422ef7c
+W
+'src/main/java/com/slava/model/Wind.java,7\a\7ae190c021b4faae670febe99b424a5834dfa8f9
+a
+1src/main/java/com/slava/model/WeatherDetails.java,5\c\5c966cfb7a1c9d69d79821e001ddaf9ecd63c531

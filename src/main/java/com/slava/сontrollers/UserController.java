@@ -44,7 +44,7 @@ public class UserController {
             return "redirect:/login";
         }
 
-        User user = sessionService.getUserBySession(sessionId);
+        User user = sessionService.getUserBySessionId(sessionId);
         List<Location> locations = locationService.getUserLocations(user.getId());
         List<Weather>  weathers = weatherService.getWeathersByLocations(locations);
         String login = user.getLogin();
@@ -56,7 +56,7 @@ public class UserController {
     @GetMapping("/login")
     public String login(@CookieValue(value = "session_id", defaultValue = "") String sessionId, Model model) {
         if (!sessionId.isEmpty()) {
-            return "redirect:/home";
+            return "/home";
         }
 
         model.addAttribute("user", new User());
@@ -69,18 +69,24 @@ public class UserController {
             return "/login";
         }
 
-        if (userService.findByLogin(user.getLogin()).isEmpty()) {
+        Optional<User> foundUser = userService.findByLogin(user.getLogin());
+        if (foundUser.isEmpty()) {
             bindingResult.rejectValue("login", "error.user", "Данный логин не существует. Выберите другой.");
             return "/login";
         }
 
-        Optional<User> foundUser = userService.findByLoginAndPassword(user.getLogin(), user.getPassword());
+        foundUser = userService.findByLoginAndPassword(user.getLogin(), user.getPassword());
         if (foundUser.isEmpty()) {
             bindingResult.rejectValue("login", "error.user", "Вы ввели неверный логин или пароль.");
             return "/login";
         }
-        String userUuid = sessionService.saveSession(foundUser.get()).toString();
-        Cookie cookie = new Cookie("session_id", userUuid);
+
+        User userEntity = foundUser.get();
+        String sessionUuid = sessionService.getSessionUuid(userEntity)
+                .orElseGet(() -> sessionService.saveSession(userEntity))
+                .toString();
+
+        Cookie cookie = new Cookie("session_id", sessionUuid);
         response.addCookie(cookie);
 
         return "redirect:/home";

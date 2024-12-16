@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,7 +22,7 @@ public class SessionService{
         this.sessionRepository = ISessionRepository;
     }
 
-    public User getUserBySession(String sessionId) {
+    public User getUserBySessionId(String sessionId) {
         UUID uuid = UUID.fromString(sessionId);
         Session session = sessionRepository.findById(uuid).orElse(null);
         User user = session.getUser();
@@ -34,5 +35,9 @@ public class SessionService{
         Session session = new Session(user, expiresAt);
         sessionRepository.save(session);
         return session.getId();
+    }
+
+    public Optional<UUID> getSessionUuid(User user) {
+        return Optional.ofNullable(sessionRepository.getUuidByUserId(user.getId()));
     }
 }
