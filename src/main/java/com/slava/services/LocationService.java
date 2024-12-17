@@ -40,6 +40,11 @@ public class LocationService {
         locationRepository.deleteById(locationId);
     }
 
+    @Transactional
+    public void deleteLocation(Coordinates coordinates) {
+        locationRepository.deleteByLatitudeAndLongitude(coordinates.getLat(), coordinates.getLon());
+    }
+
     public List<Location> getUserLocations(Long userId) {
         return locationRepository.getLocationsByUserId(userId);
     }

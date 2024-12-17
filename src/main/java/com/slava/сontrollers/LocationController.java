@@ -56,13 +56,13 @@ public class LocationController {
     }
 
     @PostMapping("/delete_location")
-    public String deleteLocation(@CookieValue(value = "session_id", defaultValue = "") String sessionId, @RequestParam("id") Long id) {
+    public String deleteLocation(@CookieValue(value = "session_id", defaultValue = "") String sessionId, @ModelAttribute("coordinates") Coordinates coordinates) {
         if (sessionId.isEmpty()){
             return "/login";
         }
 
         try {
-            locationService.deleteLocation(id);
+            locationService.deleteLocation(coordinates);
             return "redirect:/home";
         } catch (Exception e) {
             throw new RuntimeException("Error saving location");
