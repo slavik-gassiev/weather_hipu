@@ -7,6 +7,8 @@ import com.slava.services.LocationService;
 import com.slava.services.SessionService;
 import com.slava.services.UserService;
 import com.slava.services.WeatherService;
+import com.slava.validators.LoginValidator;
+import com.slava.validators.RegistrationValidator;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -29,13 +31,17 @@ public class UserController {
     private final LocationService locationService;
     private final WeatherService weatherService;
     private final UserService userService;
+    private final LoginValidator loginValidator;
+    private final RegistrationValidator registrationValidator;
 
     @Autowired
-    public UserController(SessionService sessionService, LocationService locationService, WeatherService weatherService, UserService userService) {
+    public UserController(SessionService sessionService, LocationService locationService, WeatherService weatherService, UserService userService, LoginValidator LoginValidator, RegistrationValidator registrationValidator) {
         this.sessionService = sessionService;
         this.locationService = locationService;
         this.weatherService = weatherService;
         this.userService = userService;
+        this.loginValidator = LoginValidator;
+        this.registrationValidator = registrationValidator;
     }
 
     @GetMapping("/home")
@@ -64,26 +70,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpServletResponse response) {
+    public String login(@ModelAttribute("user") User user, BindingResult bindingResult, HttpServletResponse response) {
+        loginValidator.validate(user, bindingResult);
+
         if (bindingResult.hasErrors()) {
             return "/login";
         }
 
         Optional<User> foundUser = userService.findByLogin(user.getLogin());
-        if (foundUser.isEmpty()) {
-            bindingResult.rejectValue("login", "error.user", "Данный логин не существует. Выберите другой.");
-            return "/login";
-        }
-
-        foundUser = userService.findByLoginAndPassword(user.getLogin(), user.getPassword());
-        if (foundUser.isEmpty()) {
-            bindingResult.rejectValue("login", "error.user", "Вы ввели неверный логин или пароль.");
-            return "/login";
-        }
-
-        User userEntity = foundUser.get();
-        String sessionUuid = sessionService.getSessionUuid(userEntity)
-                .orElseGet(() -> sessionService.saveSession(userEntity))
+        String sessionUuid = sessionService.getSessionUuid(foundUser.get())
+                .orElseGet(() -> sessionService.saveSession(foundUser.get()))
                 .toString();
 
         Cookie cookie = new Cookie("session_id", sessionUuid);
@@ -103,13 +99,10 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String registration(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpServletResponse response) {
-        if (bindingResult.hasErrors()) {
-            return "/registration";
-        }
+    public String registration(@ModelAttribute("user") User user, BindingResult bindingResult, HttpServletResponse response) {
+        registrationValidator.validate(user, bindingResult);
 
-        if (userService.findByLogin(user.getLogin()).isPresent()) {
-            bindingResult.rejectValue("login", "error.user", "Данный логин уже занят. Выберите другой.");
+        if (bindingResult.hasErrors()) {
             return "/registration";
         }
 
