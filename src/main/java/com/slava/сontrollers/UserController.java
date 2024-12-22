@@ -50,10 +50,13 @@ public class UserController {
             return "redirect:/login";
         }
 
-        User user = sessionService.getUserBySessionId(sessionId);
-        List<Location> locations = locationService.getUserLocations(user.getId());
+        Optional<User> user = sessionService.getUserBySessionId(sessionId);
+        if (user.isEmpty()) {
+            throw new RuntimeException("пользователь не найден");
+        }
+        List<Location> locations = locationService.getUserLocations(user.get().getId());
         List<Weather>  weathers = weatherService.getWeathersByLocations(locations);
-        String login = user.getLogin();
+        String login = user.get().getLogin();
         model.addAttribute("weathers", weathers);
         model.addAttribute("login", login);
         return "home";

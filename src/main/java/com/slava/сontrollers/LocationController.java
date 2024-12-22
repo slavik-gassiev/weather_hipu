@@ -5,7 +5,11 @@ import com.slava.model.Coordinates;
 import com.slava.model.Weather;
 import com.slava.services.LocationService;
 import com.slava.services.SessionService;
+import com.slava.services.UserService;
 import com.slava.services.WeatherService;
+import com.slava.validators.InvalidSessionException;
+import com.slava.validators.LocationAlreadyExistsException;
+import com.slava.validators.LocationDeletionException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,15 +17,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class LocationController {
-    private LocationService locationService;
-    private SessionService sessionService;
-    private WeatherService weatherService;
+    private final LocationService locationService;
+    private final SessionService sessionService;
+    private final WeatherService weatherService;
 
     @Autowired
-    public LocationController(LocationService locationService, SessionService sessionService, WeatherService weatherService) {
+    public LocationController(LocationService locationService, SessionService sessionService, WeatherService weatherService, UserService userService) {
         this.locationService = locationService;
         this.sessionService = sessionService;
         this.weatherService = weatherService;
@@ -45,14 +50,16 @@ public class LocationController {
         if (sessionId.isEmpty()){
             return "/login";
         }
-
-        try {
-            User userBySession = sessionService.getUserBySessionId(sessionId);
-            locationService.saveLocation(coordinates, userBySession);
-            return "redirect:/home";
-        } catch (Exception e) {
-            throw new RuntimeException("Error saving location");
+        Optional<User> userBySession = sessionService.getUserBySessionId(sessionId);
+        if (userBySession.isEmpty()) {
+            throw new InvalidSessionException("Error saving location");
         }
+
+        if (locationService.isLocationAlreadySavedByUser(coordinates, userBySession.get().getId())) {
+            throw new LocationAlreadyExistsException("Location already saved");
+        }
+        locationService.saveLocation(coordinates, userBySession.get());
+        return "redirect:/home";
     }
 
     @PostMapping("/delete_location")
@@ -65,7 +72,7 @@ public class LocationController {
             locationService.deleteLocation(coordinates);
             return "redirect:/home";
         } catch (Exception e) {
-            throw new RuntimeException("Error saving location");
+            throw new LocationDeletionException("Error saving location");
         }
     }
 }

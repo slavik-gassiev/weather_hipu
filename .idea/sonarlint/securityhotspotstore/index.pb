@@ -113,3 +113,7 @@ W
 'src/main/java/com/slava/model/Wind.java,7\a\7ae190c021b4faae670febe99b424a5834dfa8f9
 a
 1src/main/java/com/slava/model/WeatherDetails.java,5\c\5c966cfb7a1c9d69d79821e001ddaf9ecd63c531
+m
+=src/main/java/com/slava/validators/RegistrationValidator.java,6\c\6c507edf8c71dd9c7844331ac4ed59a76ec53a8d
+f
+6src/main/java/com/slava/validators/LoginValidator.java,a\1\a1f4b3633aa479470ab6c5e8f852f8bf5f925500

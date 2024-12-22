@@ -14,8 +14,8 @@ import java.util.Optional;
 
 @Service
 public class LocationService {
-    ILocationRepository locationRepository;
-    IUserRepository userRepository;
+    private final ILocationRepository locationRepository;
+    private final IUserRepository userRepository;
 
     @Autowired
     public LocationService(ILocationRepository ILocationRepository, IUserRepository userRepository) {
@@ -47,5 +47,11 @@ public class LocationService {
 
     public List<Location> getUserLocations(Long userId) {
         return locationRepository.getLocationsByUserId(userId);
+    }
+
+    public boolean isLocationAlreadySavedByUser(Coordinates coordinates, Long userId) {
+        return locationRepository
+                .findByLatitudeAndLongitudeAndUser_Id(coordinates.getLat(), coordinates.getLon(), userId)
+                .isPresent();
     }
 }

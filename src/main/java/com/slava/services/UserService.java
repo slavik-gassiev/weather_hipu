@@ -1,6 +1,8 @@
 package com.slava.services;
 
+import com.slava.entities.Location;
 import com.slava.entities.User;
+import com.slava.model.Coordinates;
 import com.slava.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,7 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    private IUserRepository userRepository;
+    private final IUserRepository userRepository;
 
     @Autowired
     public UserService(IUserRepository userRepository) {
@@ -42,5 +44,4 @@ public class UserService {
         Long id = saveUser(user);
         return findById(id).get();
     }
-
 }

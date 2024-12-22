@@ -3,6 +3,7 @@ package com.slava.services;
 import com.slava.entities.Session;
 import com.slava.entities.User;
 import com.slava.repositories.ISessionRepository;
+import com.slava.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,18 +16,18 @@ import java.util.UUID;
 public class SessionService{
 
     public static final long SESSION_LIFE_TIME = 1000 * 60 * 60 * 2;
-    ISessionRepository sessionRepository;
+    private final ISessionRepository sessionRepository;
+    private final IUserRepository userRepository;
 
     @Autowired
-    public SessionService(ISessionRepository ISessionRepository) {
+    public SessionService(ISessionRepository ISessionRepository, IUserRepository userRepository) {
         this.sessionRepository = ISessionRepository;
+        this.userRepository = userRepository;
     }
 
-    public User getUserBySessionId(String sessionId) {
+    public Optional<User> getUserBySessionId(String sessionId) {
         UUID uuid = UUID.fromString(sessionId);
-        Session session = sessionRepository.findById(uuid).orElse(null);
-        User user = session.getUser();
-        return user;
+        return userRepository.getUserBySessions_Id(uuid);
     }
 
     @Transactional
