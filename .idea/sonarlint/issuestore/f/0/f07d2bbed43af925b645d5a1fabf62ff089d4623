@@ -1,0 +1,5 @@
+
+{
+java:S1488f"^Immediately return this expression instead of assigning it to the temporary variable "flyway".(‹ÝÇ­8‰Í¹›¿2
+»
+java:S4449Z"˜Annotate the parameter with @javax.annotation.Nullable in method 'setDriverClassName' declaration, or make sure that null can not be passed as argument.(…³‰åýÿÿÿÿ8‡í³›¿2

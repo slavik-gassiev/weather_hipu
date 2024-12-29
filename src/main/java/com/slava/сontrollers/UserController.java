@@ -11,7 +11,6 @@ import com.slava.validators.LoginValidator;
 import com.slava.validators.RegistrationValidator;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,11 +1,9 @@
 package com.slava.config;
 
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -26,15 +24,13 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 import javax.sql.DataSource;
-import java.sql.DriverManager;
-import java.time.Duration;
 import java.util.Properties;
 
 @EnableWebMvc
 @Configuration
 @ComponentScan("com.slava")
 @EnableTransactionManagement
-@PropertySource("classpath:hibernate.properties")
+@PropertySource("classpath:application.properties")
 @EnableJpaRepositories("com.slava")
 public class WebConfig implements WebMvcConfigurer {
 
@@ -96,6 +92,19 @@ public class WebConfig implements WebMvcConfigurer {
         dataSource.setUsername(env.getProperty("hibernate.username"));
         dataSource.setPassword(env.getProperty("hibernate.password"));
         return dataSource;
+    }
+
+    @Configuration
+    public class FlywayConfig {
+
+        @Bean(initMethod = "migrate")
+        public Flyway flyway(DataSource dataSource) {
+            Flyway flyway = Flyway.configure()
+                    .dataSource(dataSource)
+                    .locations("classpath:db/migration")
+                    .load();
+            return flyway;
+        }
     }
 
     public Properties hibernateProperties() {

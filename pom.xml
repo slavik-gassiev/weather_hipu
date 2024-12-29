@@ -34,6 +34,13 @@
         <version>1.18.34</version>
         <scope>provided</scope>
     </dependency>
+    <!-- junit -->
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.13.2</version>
+        <scope>test</scope>
+    </dependency>
     <!-- thymeleaf-spring6 -->
     <dependency>
         <groupId>org.thymeleaf</groupId>
@@ -93,13 +100,40 @@
     <dependency>
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
-        <version>42.7.4</version>
+        <version>42.6.0</version>
     </dependency>
     <!-- flyway-core -->
     <dependency>
         <groupId>org.flywaydb</groupId>
         <artifactId>flyway-core</artifactId>
-        <version>10.21.0</version>
+        <version>9.22.0</version>
+    </dependency>
+    <!-- h2 -->
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>2.3.232</version>
+        <scope>test</scope>
+    </dependency>
+    <!-- jupiter -->
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>5.10.2</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <!-- springframework -->
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>6.1.8</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-test-autoconfigure</artifactId>
+        <version>3.3.0</version>
+        <scope>test</scope>
     </dependency>
 </dependencies>
 </project>

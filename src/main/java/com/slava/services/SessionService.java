@@ -41,4 +41,15 @@ public class SessionService{
     public Optional<UUID> getSessionUuid(User user) {
         return Optional.ofNullable(sessionRepository.getUuidByUserId(user.getId()));
     }
+
+    public Optional<Session> getSession(UUID uuid) {
+         Optional<Session> session = sessionRepository.findById(uuid);
+         return session;
+    }
+
+    public boolean isSessionExpired(Session session) {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        return session.getExpireAt().before(currentTimestamp);
+    }
+
 }

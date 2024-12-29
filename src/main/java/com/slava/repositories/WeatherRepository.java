@@ -1,6 +1,5 @@
-package com.slava.dao;
+package com.slava.repositories;
 
-import com.slava.entities.Location;
 import com.slava.model.Coordinates;
 import com.slava.model.OpenWeatherAPI;
 import com.slava.model.Weather;
@@ -10,20 +9,18 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Repository
-public class WeatherDao implements IWeatherDao<Weather> {
+@Repository("WeatherRepository")
+public class WeatherRepository implements IWeatherRepository<Weather> {
 
     private final OpenWeatherAPI openWeatherAPI;
     private final RestTemplate restTemplate;
 
     @Autowired
-    public WeatherDao(OpenWeatherAPI openWeatherAPI, RestTemplate restTemplate) {
+    public WeatherRepository(OpenWeatherAPI openWeatherAPI, RestTemplate restTemplate) {
         this.openWeatherAPI = openWeatherAPI;
         this.restTemplate = restTemplate;
     }

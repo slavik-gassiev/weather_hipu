@@ -1,0 +1,7 @@
+
+o
+java:S6204"RReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()'(ชจน8ฏ๋ผ2
+I
+java:S1905$"'Remove this unnecessary cast to "List".(๎่๎หüÿÿÿÿ8ด๋ผ2
+o
+java:S6204'"RReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()'(ชจน8ด๋ผ2

@@ -1,0 +1,10 @@
+
+g	java:S1127"FDefine and throw a dedicated exception instead of using a generic one.(È¤’üÿÿÿÿÿ8ÎÿˆÈ¾2
+m
+java:S1192X"KDefine a constant instead of duplicating this literal "session_id" 3 times.(²§ø…ùÿÿÿÿ8ÏÿˆÈ¾2
+r	java:S117&"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ý€Ééÿÿÿÿÿ8ÐÿˆÈ¾2
+{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¹±äšúÿÿÿÿ8ÑÿˆÈ¾2
+t
+java:S3655T"RCall "foundUser.isPresent()" or "!foundUser.isEmpty()" before accessing the value.(å¢ðŠýÿÿÿÿ8ÝÿˆÈ¾2
+W
+java:S1128"5Remove this unused import 'jakarta.validation.Valid'.(ÀãÅ”ûÿÿÿÿ8úßè÷¾2
