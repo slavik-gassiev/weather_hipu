@@ -7,6 +7,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,7 +19,8 @@ import java.util.Properties;
         "com.slava.services",
         "com.slava.repositories",
         "com.slava.entities",
-        "com.slava.model"})
+        "com.slava.model",
+        "com.slava.validators"})
 @EnableJpaRepositories(basePackages = "com.slava.repositories")
 @PropertySource("classpath:application-test.properties")
 public class TestConfig {
@@ -28,7 +30,7 @@ public class TestConfig {
         return Flyway.configure()
                 .dataSource(dataSource)
                 .locations("classpath:db/test_migration")
-                .baselineOnMigrate(true) // Для тестов
+                .baselineOnMigrate(true)
                 .cleanDisabled(false)
                 .load();
     }
@@ -70,5 +72,10 @@ public class TestConfig {
         properties.put("hibernate.show_sql", true);
         properties.put("hibernate.hbm2ddl.auto", "create-drop");
         return properties;
+    }
+
+    @Bean
+    public MockRestServiceServer mockServer(RestTemplate restTemplate) {
+        return MockRestServiceServer.createServer(restTemplate);
     }
 }

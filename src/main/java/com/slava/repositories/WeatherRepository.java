@@ -3,9 +3,12 @@ package com.slava.repositories;
 import com.slava.model.Coordinates;
 import com.slava.model.OpenWeatherAPI;
 import com.slava.model.Weather;
+import com.slava.validators.ServiceUnavailableException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,19 +30,27 @@ public class WeatherRepository implements IWeatherRepository<Weather> {
 
     @Override
     public Optional<Weather> getWeather(String latitude, String longitude) {
+        try {
+            String urlencoded = UriComponentsBuilder.fromHttpUrl(openWeatherAPI.getApiCurrentWeatherService())
+                    .queryParam("lat", latitude)
+                    .queryParam("lon", longitude)
+                    .queryParam("appid", openWeatherAPI.getAppId())
+                    .queryParam("units", "metric")
+                    .queryParam("lang", "ru")
+                    .encode()
+                    .toUriString();
 
-        String urlencoded = UriComponentsBuilder.fromHttpUrl(openWeatherAPI.getApiCurrentWeatherService())
-                .queryParam("lat", latitude)
-                .queryParam("lon", longitude)
-                .queryParam("appid", openWeatherAPI.getAPP_ID())
-                .queryParam("units", "metric")
-                .queryParam("lang", "ru")
-                .encode()
-                .toUriString();
-
-        Weather weather = restTemplate.getForObject(urlencoded, Weather.class);
-        weather.getCoordinates().setName(weather.getName());
-        return Optional.ofNullable(weather);
+            Weather weather = restTemplate.getForObject(urlencoded, Weather.class);
+            if (weather != null) {
+                weather.getCoordinates().setName(weather.getName());
+            }
+            return Optional.ofNullable(weather);
+        } catch (HttpServerErrorException e) {
+            if (e.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
+                throw new ServiceUnavailableException("Weather API is unavailable");
+            }
+            throw e; // Проброс других ошибок
+        }
     }
 
     @Override
@@ -47,7 +58,7 @@ public class WeatherRepository implements IWeatherRepository<Weather> {
         String urlencoded = UriComponentsBuilder.fromHttpUrl(openWeatherAPI.getApiGeocoding())
                 .queryParam("q", locationName)
                 .queryParam("limit", "5")
-                .queryParam("appid", openWeatherAPI.getAPP_ID())
+                .queryParam("appid", openWeatherAPI.getAppId())
                 .encode()
                 .toUriString();
 

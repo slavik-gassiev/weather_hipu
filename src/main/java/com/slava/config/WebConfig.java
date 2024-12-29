@@ -102,6 +102,7 @@ public class WebConfig implements WebMvcConfigurer {
             Flyway flyway = Flyway.configure()
                     .dataSource(dataSource)
                     .locations("classpath:db/migration")
+                    .validateOnMigrate(false)
                     .load();
             return flyway;
         }
