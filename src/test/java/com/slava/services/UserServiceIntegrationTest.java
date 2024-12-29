@@ -4,6 +4,8 @@ import com.slava.config.TestConfig;
 import com.slava.config.WebConfig;
 import com.slava.entities.User;
 import jakarta.transaction.Transactional;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceIntegrationTest {
 
     @Autowired
+    private Flyway flyway;
+
+    @Autowired
     private UserService userService;
+
+    @BeforeEach
+    void setUp() {
+        // Очищаем базу данных перед каждым тестом
+        flyway.clean();
+        flyway.migrate();
+    }
 
     @Test
     void registerUser_createsNewUserInDatabase() {

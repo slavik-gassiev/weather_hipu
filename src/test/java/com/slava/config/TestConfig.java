@@ -27,8 +27,9 @@ public class TestConfig {
     public Flyway flyway(DataSource dataSource) {
         return Flyway.configure()
                 .dataSource(dataSource)
-                .locations("classpath:db/migration")
+                .locations("classpath:db/test_migration")
                 .baselineOnMigrate(true) // Для тестов
+                .cleanDisabled(false)
                 .load();
     }
 

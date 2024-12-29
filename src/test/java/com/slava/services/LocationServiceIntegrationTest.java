@@ -1,22 +1,30 @@
 
 package com.slava.services;
 
+import com.slava.config.TestConfig;
 import com.slava.entities.Location;
 import com.slava.entities.User;
 import com.slava.model.Coordinates;
 import com.slava.repositories.ILocationRepository;
 import com.slava.repositories.IUserRepository;
+import jakarta.transaction.Transactional;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@RunWith(SpringRunner.class)
+@SpringJUnitConfig(TestConfig.class)
 @Transactional
+@TestPropertySource(locations = "classpath:application-test.properties")
 class LocationServiceIntegrationTest {
 
     @Autowired
