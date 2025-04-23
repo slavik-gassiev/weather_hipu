@@ -11,7 +11,14 @@
         <h1>Weather App</h1>
         <!-- Форма для поиска -->
         <form th:action="@{/search_location}" method="post" class="d-flex">
-            <input type="text" name="cityName" class="form-control me-2" placeholder="Введите название места" required>
+            <input type="text" name="cityName" class="form-control me-2"
+                   placeholder="Введите название места" required>
+
+            <select name="source" class="form-select me-2">
+                <option value="WeatherRepository">OpenWeather</option>
+                <option value="WeatherAPIRepository">WeatherAPI</option>
+            </select>
+
             <button type="submit" class="btn btn-light">Найти</button>
         </form>
         <!-- Блок пользователя -->

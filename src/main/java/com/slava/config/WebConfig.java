@@ -1,5 +1,10 @@
 package com.slava.config;
 
+import com.slava.model.Weather;
+import com.slava.model.weatherApi.WAWeather;
+import com.slava.repositories.IWeatherRepository;
+import com.slava.repositories.WeatherAPIRepository;
+import com.slava.repositories.WeatherRepository;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -24,6 +29,7 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 import javax.sql.DataSource;
+import java.util.Map;
 import java.util.Properties;
 
 @EnableWebMvc
@@ -41,6 +47,20 @@ public class WebConfig implements WebMvcConfigurer {
     public WebConfig(ApplicationContext applicationContext, Environment env) {
         this.applicationContext = applicationContext;
         this.env = env;
+    }
+
+    @Bean
+    public Map<String, IWeatherRepository<Weather>> weatherRepositories(WeatherRepository weatherRepository) {
+        return Map.of(
+                "WeatherRepository", weatherRepository
+        );
+    }
+
+    @Bean
+    public Map<String, IWeatherRepository<WAWeather>> weatherAPIRepository(WeatherAPIRepository weatherAPIRepository) {
+        return Map.of(
+                "WeatherAPIRepository", weatherAPIRepository
+        );
     }
 
     @Bean

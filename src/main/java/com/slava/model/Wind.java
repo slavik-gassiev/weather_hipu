@@ -1,10 +1,11 @@
 package com.slava.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.slava.model.imodel.IWind;
 import lombok.Data;
 
 @Data
-public class Wind {
+public class Wind implements IWind {
     @JsonProperty("speed")
     private String speed;
 }

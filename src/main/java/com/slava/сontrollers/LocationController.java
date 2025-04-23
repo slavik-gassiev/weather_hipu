@@ -3,6 +3,7 @@ package com.slava.сontrollers;
 import com.slava.entities.User;
 import com.slava.model.Coordinates;
 import com.slava.model.Weather;
+import com.slava.model.imodel.IWeather;
 import com.slava.services.LocationService;
 import com.slava.services.SessionService;
 import com.slava.services.UserService;
@@ -33,17 +34,28 @@ public class LocationController {
     }
 
     @PostMapping("/search_location")
-    public String searchLocation(@CookieValue(value = "session_id", defaultValue = "") String sessionId, @RequestParam(name = "cityName") String cityName,
-                                 HttpServletResponse response,
-                                 Model model) {
-        if (sessionId.isEmpty()){
+    public String searchLocation(
+            @CookieValue(value="session_id", defaultValue="") String sessionId,
+            @RequestParam("cityName") String cityName,
+            @RequestParam(name="source", defaultValue="WeatherRepository") String source,
+            Model model) {
+
+        if (sessionId.isEmpty()) {
             return "redirect:/login";
         }
 
-        List<Weather> weathers = weatherService.searchWeather(cityName);
+        try {
+            weatherService.switchRepository(source);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "search";
+        }
+
+        List<? extends IWeather> weathers = weatherService.searchWeather(cityName);
         model.addAttribute("weathers", weathers);
         return "search";
     }
+
 
     @PostMapping("/save_location")
     public String saveLocation(@CookieValue(value = "session_id", defaultValue = "") String sessionId, @ModelAttribute("coordinates") Coordinates coordinates) {

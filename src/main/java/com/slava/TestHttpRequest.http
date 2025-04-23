@@ -10,3 +10,13 @@ GET https://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=24f2097
 Accept: application/json
 
 ###
+GET  https://api.weatherapi.com/v1/current.json?key=04b0a7766f064ff09ee190330251404&q=London
+Accept: application/json
+
+###
+GET https://api.weatherapi.com/v1/current.json?key=04b0a7766f064ff09ee190330251404&q=44.34,10.99
+Accept: application/json
+
+###
+GET  https://api.weatherapi.com/v1/search.json?key=04b0a7766f064ff09ee190330251404&q=lond
+Accept: application/json

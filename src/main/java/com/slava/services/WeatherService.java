@@ -1,5 +1,7 @@
 package com.slava.services;
 
+import com.slava.model.imodel.IWeather;
+import com.slava.repositories.IWeatherRepository;
 import com.slava.repositories.WeatherRepository;
 import com.slava.entities.Location;
 import com.slava.model.Weather;
@@ -7,36 +9,50 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class WeatherService {
 
-    private final WeatherRepository weatherRepository;
+    private final Map<String, IWeatherRepository<? extends IWeather>> repos;
+    private IWeatherRepository<? extends IWeather> currentRepo;
 
     @Autowired
-    public WeatherService(WeatherRepository weatherRepository) {
-        this.weatherRepository = weatherRepository;
+    public WeatherService(Map<String, IWeatherRepository<? extends IWeather>> repos) {
+        this.repos = repos;
+        this.currentRepo = repos.get("WeatherRepository");   // дефолт
     }
 
-    public Optional<Weather> getWeather(Location location) {
-        return weatherRepository.getWeather(location.getLatitude().toString(), location.getLongitude().toString());
+    public void switchRepository(String beanName) {
+        IWeatherRepository<? extends IWeather> repo = repos.get(beanName);
+        if (repo == null) {
+            throw new IllegalArgumentException("Нет такого источника: " + beanName);
+        }
+        this.currentRepo = repo;
     }
 
-    public List<Weather> searchWeather(String locationName) {
-        return weatherRepository.searchWeather(locationName)
-                .stream().flatMap(Optional::stream)
-                .collect(Collectors.toList());
+    public Optional<? extends IWeather> getWeather(Location loc) {
+        return currentRepo.getWeather(
+                loc.getLatitude().toString(),
+                loc.getLongitude().toString());
     }
 
-
-    public List<Weather> getWeathersByLocations(List<Location> locations) {
-
-        return (List<Weather>) locations.stream()
-                .map(location -> weatherRepository.getWeather(location.getLatitude().toString(), location.getLongitude().toString()))
+    public List<? extends IWeather> searchWeather(String name) {
+        return currentRepo.searchWeather(name)
+                .stream()
                 .flatMap(Optional::stream)
-                .collect(Collectors.toList());
+                .toList();
+    }
+
+    public List<? extends IWeather> getWeathersByLocations(List<Location> locs) {
+        return locs.stream()
+                .map(l -> currentRepo.getWeather(
+                        l.getLatitude().toString(),
+                        l.getLongitude().toString()))
+                .flatMap(Optional::stream)
+                .toList();
     }
 }
 

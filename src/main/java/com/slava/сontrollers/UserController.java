@@ -3,6 +3,7 @@ package com.slava.сontrollers;
 import com.slava.entities.Location;
 import com.slava.entities.User;
 import com.slava.model.Weather;
+import com.slava.model.imodel.IWeather;
 import com.slava.services.LocationService;
 import com.slava.services.SessionService;
 import com.slava.services.UserService;
@@ -54,7 +55,7 @@ public class UserController {
             throw new RuntimeException("пользователь не найден");
         }
         List<Location> locations = locationService.getUserLocations(user.get().getId());
-        List<Weather>  weathers = weatherService.getWeathersByLocations(locations);
+        List<? extends IWeather>  weathers = weatherService.getWeathersByLocations(locations);
         String login = user.get().getLogin();
         model.addAttribute("weathers", weathers);
         model.addAttribute("login", login);
