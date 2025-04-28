@@ -12,4 +12,10 @@ public class WeatherDetails implements IWeatherDetails {
     private String description;
     @JsonProperty("icon")
     private String icon;
+
+    @Override
+    @JsonProperty("icon")
+    public void setIcon(String code) {
+        this.icon = "https://openweathermap.org/img/wn/" + code + "@2x.png";
+    }
 }

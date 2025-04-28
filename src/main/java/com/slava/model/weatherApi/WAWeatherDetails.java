@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class WAWeatherDetails implements IWeatherDetails {
+
     @JsonIgnore
-    @JsonProperty("code")
     private String main;
 
     @JsonProperty("text")
@@ -19,7 +19,13 @@ public class WAWeatherDetails implements IWeatherDetails {
 
     private String icon;
 
-    private void unpackIcon(String rawUrl) {
-        this.icon = "https:" + rawUrl;
+    @JsonProperty("code")
+    private void unpackCode(int code) {
+        this.main = WAGroup.fromCode(code);   // «Clouds»
+    }
+
+    @JsonSetter("icon")
+    private void setRawIcon(String rawUrl) {
+        this.icon = rawUrl.startsWith("http") ? rawUrl : "https:" + rawUrl;
     }
 }

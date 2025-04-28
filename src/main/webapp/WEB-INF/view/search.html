@@ -8,10 +8,11 @@
 <body>
 <header class="bg-primary text-white p-3">
     <div class="container d-flex justify-content-between align-items-center">
-        <h1>Weather App</h1>
+        <h1>Система мониторинга погоды</h1>
         <form th:action="@{/search_location}" method="post" class="d-flex">
             <input type="text" name="cityName" class="form-control me-2"
-                   placeholder="Введите название места" required>
+                   placeholder="Введите название места"
+                   th:value="${cityName}" required>
 
             <select name="source" class="form-select me-2">
                 <option value="WeatherRepository">OpenWeather</option>
@@ -30,7 +31,7 @@
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <!-- Иконка погоды -->
-                    <img th:src="'http://openweathermap.org/img/wn/' + ${weather.weatherDetails[0].icon} + '@2x.png'"
+                    <img th:src="${weather.weatherDetails[0].icon}"
                          alt="Weather icon"
                          class="mb-3"
                          style="width: 80px; height: 80px;">

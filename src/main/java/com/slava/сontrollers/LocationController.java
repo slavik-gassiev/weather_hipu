@@ -53,6 +53,7 @@ public class LocationController {
 
         List<? extends IWeather> weathers = weatherService.searchWeather(cityName);
         model.addAttribute("weathers", weathers);
+        model.addAttribute("cityName", cityName);
         return "search";
     }
 
@@ -75,7 +76,8 @@ public class LocationController {
     }
 
     @PostMapping("/delete_location")
-    public String deleteLocation(@CookieValue(value = "session_id", defaultValue = "") String sessionId, @ModelAttribute("coordinates") Coordinates coordinates) {
+    public String deleteLocation(@CookieValue(value = "session_id", defaultValue = "") String sessionId,
+                                 @ModelAttribute("coordinates") Coordinates coordinates) {
         if (sessionId.isEmpty()){
             return "/login";
         }
@@ -86,5 +88,23 @@ public class LocationController {
         } catch (Exception e) {
             throw new LocationDeletionException("Error saving location");
         }
+    }
+
+    @PostMapping("/change_api")
+    public String changeApi(@CookieValue(value = "session_id", defaultValue = "") String sessionId,
+                            @RequestParam(name="source", defaultValue="WeatherRepository") String source,
+                            Model model) {
+        if (sessionId.isEmpty()){
+            return "/login";
+        }
+
+        try {
+            weatherService.switchRepository(source);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", "Invalid weather source: " + source);
+            return "redirect:/home";
+        }
+
+        return "redirect:/home";
     }
 }

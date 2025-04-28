@@ -51,7 +51,7 @@ public class WAWeather implements IWeather {
         /* condition → WeatherDetails (список из одного элемента) */
         Map<String, Object> cond = (Map<String, Object>) cur.get("condition");
         WAWeatherDetails details = new WAWeatherDetails();
-        details.setMain( (String) cond.get("text") );          // «Patchy rain nearby»
+        details.setMain(WAGroup.fromCode((Integer) cond.get("code")));          // «Patchy rain nearby»
         details.setDescription( (String) cond.get("text") );
         details.setIcon( (String) cond.get("icon") );
 
