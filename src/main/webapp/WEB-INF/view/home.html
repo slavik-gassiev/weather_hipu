@@ -22,7 +22,7 @@
                     <input type="text" name="cityName" class="form-control me-2"
                            placeholder="Введите название места" required>
 
-                    <select name="source" class="form-select me-2">
+                    <select name="sources" class="form-select me-2">
                         <option value="WeatherRepository">OpenWeather</option>
                         <option value="WeatherAPIRepository">WeatherAPI</option>
                     </select>
@@ -54,7 +54,6 @@
 
 
 <main class="container mt-4">
-    <h2 class="mb-4">Найдено:</h2>
     <div class="row" th:if="${weathers != null && weathers.size() > 0}">
         <div class="col-md-4 mb-4" th:each="weather : ${weathers}">
             <div class="card shadow-sm">

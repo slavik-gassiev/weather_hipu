@@ -54,5 +54,10 @@ public class WeatherService {
                 .flatMap(Optional::stream)
                 .toList();
     }
+
+    public List<? extends IWeather> searchWeatherBySource(String cityName, String source) {
+        switchRepository(source);
+        return searchWeather(cityName);
+    }
 }
 

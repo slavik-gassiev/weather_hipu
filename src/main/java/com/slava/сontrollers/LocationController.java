@@ -17,7 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -37,23 +39,35 @@ public class LocationController {
     public String searchLocation(
             @CookieValue(value="session_id", defaultValue="") String sessionId,
             @RequestParam("cityName") String cityName,
-            @RequestParam(name="source", defaultValue="WeatherRepository") String source,
+            @RequestParam("sources") List<String> sources,
             Model model) {
 
         if (sessionId.isEmpty()) {
             return "redirect:/login";
         }
 
-        try {
-            weatherService.switchRepository(source);
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
+        if (sources == null || sources.isEmpty()) {
+            model.addAttribute("error", "Выберите хотя бы один источник данных!");
+            model.addAttribute("cityName", cityName);
             return "search";
         }
 
-        List<? extends IWeather> weathers = weatherService.searchWeather(cityName);
-        model.addAttribute("weathers", weathers);
+        Map<String, List<? extends IWeather>> resultsByApi = new HashMap<>();
+        Map<String, String> errorsByApi = new HashMap<>();
+
+        for (String source : sources) {
+            try {
+                List<? extends IWeather> weathers = weatherService.searchWeatherBySource(cityName, source);
+                resultsByApi.put(source, weathers);
+            } catch (Exception e) {
+                errorsByApi.put(source, "Ошибка при получении данных: " + e.getMessage());
+            }
+        }
+
+        model.addAttribute("resultsByApi", resultsByApi);
+        model.addAttribute("errorsByApi", errorsByApi);
         model.addAttribute("cityName", cityName);
+        model.addAttribute("selectedSources", sources);
         return "search";
     }
 
