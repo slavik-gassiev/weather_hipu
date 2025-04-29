@@ -45,14 +45,17 @@ public class UserController {
     }
 
     @GetMapping("/home")
-    public String mainHomePage(@CookieValue(value = "session_id", defaultValue = "") String sessionId, Model model) {
+    public String mainHomePage(@CookieValue(value = "session_id", defaultValue = "") String sessionId,
+                               Model model,
+                               HttpServletResponse response) {
         if (sessionId.isEmpty()){
             return "redirect:/login";
         }
 
         Optional<User> user = sessionService.getUserBySessionId(sessionId);
         if (user.isEmpty()) {
-            throw new RuntimeException("пользователь не найден");
+            response.addCookie(buildSessionCookie("", 0));
+            return "redirect:/login";
         }
         List<Location> locations = locationService.getUserLocations(user.get().getId());
         List<? extends IWeather>  weathers = weatherService.getWeathersByLocations(locations);
@@ -86,7 +89,7 @@ public class UserController {
                 .toString();
 
         Cookie cookie = new Cookie("session_id", sessionUuid);
-        response.addCookie(cookie);
+        response.addCookie(buildSessionCookie(sessionUuid, -1));
 
         return "redirect:/home";
     }
@@ -112,9 +115,9 @@ public class UserController {
         User createdUser = userService.saveAndGetUser(user);
         String userUuid = sessionService.saveSession(createdUser).toString();
         Cookie cookie = new Cookie("session_id", userUuid);
-        response.addCookie(cookie);
+        response.addCookie(buildSessionCookie(userUuid, -1));
 
-        return "/home";
+        return "redirect:/home";
     }
 
     @GetMapping("/logout")
@@ -122,8 +125,17 @@ public class UserController {
         Cookie cookie = new Cookie("session_id", "");
         response.addCookie(cookie);
         cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        response.addCookie(buildSessionCookie("", 0));
 
-        return "/logout";
+        return "redirect:/login";
     }
+
+    private Cookie buildSessionCookie(String value, int maxAge) {
+        Cookie cookie = new Cookie("session_id", value);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");      //  <─  главное
+        cookie.setMaxAge(maxAge); // -1 = до закрытия, 0 = удалить
+        return cookie;
+    }
+
 }
