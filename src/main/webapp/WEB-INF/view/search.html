@@ -1,88 +1,77 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Поиск погоды</title>
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap / Icons / Google-fonts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <!-- jQuery (обязательно) -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-    <!-- Bootstrap Select -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
-
-
+    <!-- 🟢 ОБЩИЕ СТИЛИ ДЛЯ ВСЕХ СТРАНИЦ -->
+    <link th:href="@{resources/css/weather-style.css}" rel="stylesheet">
 </head>
 <body>
+
+<!-- ─── Шапка ─────────────────────────────────────── -->
 <header class="bg-primary text-white p-3">
     <div class="container d-flex justify-content-between align-items-center">
         <h1 class="mb-0">
-            <a th:href="@{/home}" class="text-white text-decoration-none">
-                Система мониторинга погоды
-            </a>
+            <a th:href="@{/home}" class="text-white text-decoration-none">Система мониторинга погоды</a>
         </h1>
+
+        <!-- Форма поиска -->
         <form th:action="@{/search_location}" method="post" class="d-flex align-items-center gap-2">
             <input type="text" name="cityName" class="form-control"
-                   placeholder="Введите название места"
-                   th:value="${cityName}" required>
+                   placeholder="Введите название места" th:value="${cityName}" required>
 
-            <!-- API Выбор -->
+            <!-- Выбор API -->
             <div class="btn-group me-2">
-                <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    Выберите API
-                </button>
-                <ul class="dropdown-menu p-3" style="min-width: 250px;">
-                    <li>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="sources" value="WeatherRepository"
-                                   th:checked="${#lists.contains(selectedSources, 'WeatherRepository')}" id="weatherRepo">
-                            <label class="form-check-label" for="weatherRepo">OpenWeather</label>
-                        </div>
+                <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">Выберите API</button>
+                <ul class="dropdown-menu p-3" style="min-width:250px">
+                    <li class="form-check">
+                        <input class="form-check-input" type="checkbox" name="sources" value="WeatherRepository"
+                               th:checked="${#lists.contains(selectedSources,'WeatherRepository')}" id="api1">
+                        <label class="form-check-label" for="api1">OpenWeather</label>
                     </li>
-                    <li>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="sources" value="WeatherAPIRepository"
-                                   th:checked="${#lists.contains(selectedSources, 'WeatherAPIRepository')}" id="weatherApiRepo">
-                            <label class="form-check-label" for="weatherApiRepo">WeatherAPI</label>
-                        </div>
+                    <li class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" name="sources" value="WeatherAPIRepository"
+                               th:checked="${#lists.contains(selectedSources,'WeatherAPIRepository')}" id="api2">
+                        <label class="form-check-label" for="api2">WeatherAPI</label>
                     </li>
-                    <!-- И дальше можно добавить ещё API! -->
                 </ul>
             </div>
 
-
-            <button type="submit" class="btn btn-light">
-                Найти
-            </button>
+            <button type="submit" class="btn btn-light">Найти</button>
         </form>
     </div>
 </header>
 
-<!-- ─── Контент (заменить существующий <main>…</main>) ───────────────────────── -->
+<!-- ─── Контент ───────────────────────────────────── -->
 <main class="container mt-5 flex-grow-1">
 
-    <!-- Ошибки -->
-    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+    <!-- Сообщение об ошибке выбора источников -->
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        <span th:text="${error}"></span>
+    </div>
 
-    <div th:if="${errorsByApi}">
-        <div th:each="e : ${errorsByApi}" class="alert alert-danger" role="alert">
-            Ошибка в API <strong th:text="${e.key}"></strong>:
-            <span th:text="${e.value}"></span>
+    <!-- Ошибки конкретных API -->
+    <div th:if="${errorsByApi!=null}">
+        <div th:each="e:${errorsByApi}">
+            <div class="alert alert-danger" role="alert">
+                Ошибка в API <strong th:text="${e.key}"></strong>: <span th:text="${e.value}"></span>
+            </div>
         </div>
     </div>
 
     <!-- Результаты -->
-    <div th:if="${resultsByApi}">
-        <div th:each="entry : ${resultsByApi}">
-            <h4 class="text-white mb-4" th:text="'Результаты для API: ' + ${entry.key}"></h4>
+    <div th:if="${resultsByApi!=null}">
+        <div th:each="entry:${resultsByApi}">
+            <h3 class="text-white mb-4" th:text="'Результаты для API: '+${entry.key}"></h3>
 
-            <div class="row g-4">
-                <!-- КАРТОЧКА как на главной -->
-                <div class="col-md-4" th:each="weather : ${entry.value}">
+            <div class="row">
+                <div class="col-md-4 mb-4" th:each="weather:${entry.value}">
                     <div class="card weather-card d-flex flex-column text-center p-4 h-100">
 
                         <div class="weather-icon-wrap">
@@ -91,53 +80,72 @@
 
                         <h5 class="mb-3" th:text="${weather.name}">Город</h5>
 
-                        <table class="table table-borderless table-sm mb-3 text-start">
-                            <tbody>
-                            <tr><td>🌡 Температура:</td><td th:text="${weather.parameters.temp} + ' °C'"></td></tr>
-                            <tr><td>💧 Влажность:</td><td th:text="${weather.parameters.humidity} + '%'"></td></tr>
-                            <tr><td>🌬 Ветер:</td><td th:text="${weather.wind.speed} + ' м/с'"></td></tr>
-                            <tr><td>🌤 Состояние:</td><td th:text="${weather.weatherDetails[0].main}"></td></tr>
-                            <tr><td>📝 Описание:</td><td th:text="${weather.weatherDetails[0].description}"></td></tr>
-                            </tbody>
-                        </table>
+                        <div class="card p-3 shadow-sm mx-auto" style="max-width:330px">
+                            <table class="table table-borderless table-sm mb-0">
+                                <tbody>
+                                <tr><td class="text-end"><i class="bi bi-thermometer-half"></i></td>
+                                    <td class="text-start">Температура:</td>
+                                    <td><strong th:text="${weather.parameters.temp} + ' °C'"></strong></td></tr>
+                                <tr><td class="text-end text-primary"><i class="bi bi-droplet"></i></td>
+                                    <td class="text-start">Влажность:</td>
+                                    <td><strong th:text="${weather.parameters.humidity} + '%'"></strong></td></tr>
+                                <tr><td class="text-end"><i class="bi bi-wind"></i></td>
+                                    <td class="text-start">Ветер:</td>
+                                    <td><strong th:text="${weather.wind.speed} + ' м/с'"></strong></td></tr>
+                                <tr><td class="text-end"><i class="bi bi-cloud"></i></td>
+                                    <td class="text-start">Состояние:</td>
+                                    <td><strong th:text="${weather.weatherDetails[0].main}"></strong></td></tr>
+                                <tr><td class="text-end text-danger"><i class="bi bi-card-text"></i></td>
+                                    <td class="text-start">Описание:</td>
+                                    <td><strong th:text="${weather.weatherDetails[0].description}"></strong></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-                        <form th:action="@{/save_location}" method="post" class="mt-auto">
+                        <form th:action="@{/save_location}" method="post" class="mt-4">
                             <input type="hidden" name="name" th:value="${weather.name}">
                             <input type="hidden" name="lat"  th:value="${weather.coordinates.lat}">
                             <input type="hidden" name="lon"  th:value="${weather.coordinates.lon}">
-                            <button type="submit" class="btn btn-primary w-100 rounded-0">Сохранить</button>
+                            <button type="submit" class="btn btn-outline-success w-100">Сохранить</button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <hr class="border-light my-5">
+            <hr class="text-white"/>
         </div>
     </div>
 
-    <p th:if="${resultsByApi == null || resultsByApi.isEmpty()}"
+    <p th:if="${resultsByApi==null || resultsByApi.isEmpty()}"
        class="text-white fs-4 text-center">Ничего не найдено.</p>
 </main>
 
+<!-- ─── Футер ─────────────────────────────────────── -->
+<footer class="mt-auto py-4">
+    <div class="container d-lg-flex justify-content-between align-items-center text-center">
+        <p class="mb-3 mb-lg-0 fw-light small">
+            Дипломная работа, 2025 г.<br>
+            Инженерно-экономический факультет<br>
+            Юго-Осетинский государственный университет им.&nbsp;А.&nbsp;А.&nbsp;Тибилова
+        </p>
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <a class="me-lg-4 d-flex align-items-center gap-2"
+           href="https://www.xipu.ru/" target="_blank" rel="noopener">
+            <img th:src="@{/resources/img/hipu-logo.png}" alt="Логотип ЮОГУ"
+                 width="48" height="48" style="border-radius:50%">
+            xipu.ru
+        </a>
 
-<!-- Bootstrap Bundle (обязательно для dropdown) -->
+        <a href="https://github.com/slavik-gassiev/weather_hipu"
+           target="_blank" rel="noopener"
+           class="d-flex align-items-center gap-2">
+            <i class="bi bi-github fs-5"></i>
+            github.com/slavik-gassiev/weather_hipu
+        </a>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Bootstrap Select -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        $('.selectpicker').selectpicker({
-            style: 'btn-light',
-            size: 4
-        });
-    });
-</script>
-
-
 </body>
 </html>

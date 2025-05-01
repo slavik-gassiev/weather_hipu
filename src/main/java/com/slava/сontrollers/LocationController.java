@@ -106,7 +106,7 @@ public class LocationController {
 
     @PostMapping("/change_api")
     public String changeApi(@CookieValue(value = "session_id", defaultValue = "") String sessionId,
-                            @RequestParam(name="source", defaultValue="WeatherRepository") String source,
+                            @RequestParam(name="sources", defaultValue="WeatherRepository") String source,
                             Model model) {
         if (sessionId.isEmpty()){
             return "/login";
