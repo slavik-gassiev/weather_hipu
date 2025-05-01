@@ -1,0 +1,151 @@
+body{
+    font-family:'Roboto',sans-serif;
+    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+    min-height:100vh;
+}
+header.bg-primary{
+    background:linear-gradient(135deg,#3b82f6 0%,#6366f1 100%);
+    box-shadow:0 4px 12px rgba(0,0,0,.2);
+    border-radius:0 0 16px 16px;
+}
+
+/* --- форма поиска --- */
+.search-form .form-control,
+.search-form .form-select{width:230px}
+.search-form .btn{white-space:nowrap}
+.form-control,.form-select{
+    border:none;border-radius:.5rem;box-shadow:0 2px 6px rgba(0,0,0,.1)
+}
+
+/* --- кнопки --- */
+.btn-light{border-radius:.5rem;font-weight:500}
+.btn-light:hover{background:#f0f0f0}
+.btn-danger{border-radius:.5rem;padding:.375rem 1.25rem;font-weight:500}
+
+/* --- карточка погоды с анимацией --- */
+.card.weather-card{
+    border-radius:1rem;
+    backdrop-filter:blur(8px);
+    background:rgba(255,255,255,.92);
+    box-shadow:0 4px 12px rgba(0,0,0,.12);
+    transition:transform .25s ease,box-shadow .25s ease;
+    animation:fadeIn .8s ease-in;
+}
+.card.weather-card:hover{
+    transform:translateY(-8px) scale(1.03);
+    box-shadow:0 12px 24px rgba(0,0,0,.25);
+}
+
+/* --- медальон под иконку --- */
+.weather-icon-wrap{
+    width:90px;height:90px;margin:0 auto 1rem;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);
+    box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+
+.weather-icon-wrap img{
+    width:60px;height:60px;transition:transform .25s ease;
+}
+.card.weather-card:hover .weather-icon-wrap img{transform:scale(1.1)}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+h3{font-weight:600}
+
+/* адаптив: на узких экранах блоки уходят в столбец */
+@media(max-width:768px){
+    header .row>div{margin-bottom:1rem}
+}
+/* --- Найти: ярко-зелёная с zoom эффектом --- */
+.btn-light {
+    background-color: #22c55e;
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+.btn-light:hover {
+    background-color: #16a34a;
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 8px 16px rgba(34,197,94,0.3);
+}
+
+/* --- API: оранжевая обводка с пульсом --- */
+.btn-outline-light {
+    border: 2px solid #f97316;
+    color: #f97316;
+    font-weight: 600;
+    background-color: transparent;
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 1;
+}
+.btn-outline-light:hover {
+    background-color: #f97316;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(249, 115, 22, 0.35);
+}
+
+/* Пульс эффект для API */
+.btn-outline-light::after {
+    content: '';
+    position: absolute;
+    top: -8px; left: -8px; right: -8px; bottom: -8px;
+    border-radius: 1rem;
+    border: 3px solid rgba(249, 115, 22, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s;
+    animation: pulse-api 1.2s infinite;
+    z-index: 0;
+}
+.btn-outline-light:hover::after {
+    opacity: 1;
+}
+
+@keyframes pulse-api {
+    0%   { transform: scale(1); opacity: 0.7; }
+    50%  { transform: scale(1.2); opacity: 0; }
+    100% { transform: scale(1); opacity: 0; }
+}
+footer{
+    background:linear-gradient(135deg,#6366f1 0%,#3b82f6 100%);
+    color:#fff;
+}
+footer a{
+    color:#fff;text-decoration:none;font-weight:500;
+    display:inline-flex;align-items:center;gap:.25rem;
+    transition:transform .25s ease,box-shadow .25s ease;
+}
+footer a:hover{
+    transform:translateY(-2px) scale(1.04);
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
+    color:#fff;
+}
+.footer-logo{
+    width:38px;height:38px;border-radius:50%;
+    background:#fff;display:flex;align-items:center;
+    justify-content:center;color:#3b82f6;font-weight:700;
+    font-size:1.1rem;
+}
+
+html, body {
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+}
+main {
+    flex: 1 0 auto;
+}
+footer {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+    color: #fff;
+}

@@ -62,59 +62,63 @@
     </div>
 </header>
 
-<main class="container mt-4">
+<!-- ─── Контент (заменить существующий <main>…</main>) ───────────────────────── -->
+<main class="container mt-5 flex-grow-1">
 
-    <!-- Ошибка если не выбраны источники -->
-    <div th:if="${error}" class="alert alert-danger" role="alert">
-        <span th:text="${error}"></span>
-    </div>
+    <!-- Ошибки -->
+    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
 
-    <!-- Вывод ошибок по API -->
-    <div th:if="${errorsByApi != null}">
-        <div th:each="errorEntry : ${errorsByApi}">
-            <div class="alert alert-danger" role="alert">
-                Ошибка в API <strong th:text="${errorEntry.key}"></strong>:
-                <span th:text="${errorEntry.value}"></span>
-            </div>
+    <div th:if="${errorsByApi}">
+        <div th:each="e : ${errorsByApi}" class="alert alert-danger" role="alert">
+            Ошибка в API <strong th:text="${e.key}"></strong>:
+            <span th:text="${e.value}"></span>
         </div>
     </div>
 
-    <!-- Вывод результатов по API -->
-    <div th:if="${resultsByApi != null}">
+    <!-- Результаты -->
+    <div th:if="${resultsByApi}">
         <div th:each="entry : ${resultsByApi}">
-            <h3 th:text="'Результаты для API: ' + ${entry.key}" class="mb-3"></h3>
+            <h4 class="text-white mb-4" th:text="'Результаты для API: ' + ${entry.key}"></h4>
 
-            <div class="row">
-                <div class="col-md-4 mb-4" th:each="weather : ${entry.value}">
-                    <div class="card shadow-sm">
-                        <div class="card-body text-center">
-                            <img th:src="${weather.weatherDetails[0].icon}" alt="Weather icon"
-                                 class="mb-3" style="width: 80px; height: 80px;">
-                            <h5 th:text="${weather.name}"></h5>
-                            <p class="mb-1">Температура: <span th:text="${weather.parameters.temp} + ' °C'"></span></p>
-                            <p class="mb-1">Влажность: <span th:text="${weather.parameters.humidity} + '%'"></span></p>
-                            <p class="mb-1">Скорость ветра: <span th:text="${weather.wind.speed} + ' m/s'"></span></p>
-                            <p class="mb-1">Состояние: <span th:text="${weather.weatherDetails[0].main}"></span></p>
-                            <p>Описание: <span th:text="${weather.weatherDetails[0].description}"></span></p>
+            <div class="row g-4">
+                <!-- КАРТОЧКА как на главной -->
+                <div class="col-md-4" th:each="weather : ${entry.value}">
+                    <div class="card weather-card d-flex flex-column text-center p-4 h-100">
+
+                        <div class="weather-icon-wrap">
+                            <img th:src="${weather.weatherDetails[0].icon}" alt="icon">
                         </div>
-                        <div class="card-footer p-0">
-                            <form th:action="@{/save_location}" method="post">
-                                <input type="hidden" name="name" th:value="${weather.name}" />
-                                <input type="hidden" name="lat" th:value="${weather.coordinates.lat}" />
-                                <input type="hidden" name="lon" th:value="${weather.coordinates.lon}" />
-                                <button type="submit" class="btn btn-primary btn-block rounded-0" style="width: 100%;">Сохранить</button>
-                            </form>
-                        </div>
+
+                        <h5 class="mb-3" th:text="${weather.name}">Город</h5>
+
+                        <table class="table table-borderless table-sm mb-3 text-start">
+                            <tbody>
+                            <tr><td>🌡 Температура:</td><td th:text="${weather.parameters.temp} + ' °C'"></td></tr>
+                            <tr><td>💧 Влажность:</td><td th:text="${weather.parameters.humidity} + '%'"></td></tr>
+                            <tr><td>🌬 Ветер:</td><td th:text="${weather.wind.speed} + ' м/с'"></td></tr>
+                            <tr><td>🌤 Состояние:</td><td th:text="${weather.weatherDetails[0].main}"></td></tr>
+                            <tr><td>📝 Описание:</td><td th:text="${weather.weatherDetails[0].description}"></td></tr>
+                            </tbody>
+                        </table>
+
+                        <form th:action="@{/save_location}" method="post" class="mt-auto">
+                            <input type="hidden" name="name" th:value="${weather.name}">
+                            <input type="hidden" name="lat"  th:value="${weather.coordinates.lat}">
+                            <input type="hidden" name="lon"  th:value="${weather.coordinates.lon}">
+                            <button type="submit" class="btn btn-primary w-100 rounded-0">Сохранить</button>
+                        </form>
                     </div>
                 </div>
             </div>
 
-            <hr/>
+            <hr class="border-light my-5">
         </div>
     </div>
 
-    <p th:if="${resultsByApi == null || resultsByApi.isEmpty()}">Ничего не найдено.</p>
+    <p th:if="${resultsByApi == null || resultsByApi.isEmpty()}"
+       class="text-white fs-4 text-center">Ничего не найдено.</p>
 </main>
+
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
