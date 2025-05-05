@@ -8,13 +8,20 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <!-- Material Design Bootstrap CSS -->
+    <!-- MDB CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
 
     <style>
+        :root {
+            --bg-start: #4b5563;         /* slate-600 */
+            --bg-end: #6b7280;           /* slate-500 */
+            --accent: #374151;           /* slate-700 */
+            --accent-light: #4b5563;     /* slate-600 */
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -24,16 +31,16 @@
         .card {
             border-radius: 1rem;
             backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.85);
-            border: 2px solid #667eea;
-            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
-            animation: fadeInUp 1s ease-out;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--bg-end);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            animation: fadeInUp 0.8s ease-out;
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(50px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
@@ -42,29 +49,30 @@
         }
 
         .form-outline .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.15rem rgba(55, 65, 81, 0.25);
         }
 
         .btn-primary {
-            background-color: #667eea;
-            border-color: #667eea;
+            background-color: var(--accent);
+            border-color: var(--accent);
             transition: all 0.3s ease;
         }
 
         .btn-primary:hover {
-            background-color: #5a67d8;
-            border-color: #5a67d8;
-            transform: scale(1.05);
+            background-color: var(--accent-light);
+            border-color: var(--accent-light);
+            transform: scale(1.03);
         }
 
         a {
-            color: #764ba2;
+            color: var(--accent);
             text-decoration: none;
+            transition: color 0.2s;
         }
 
         a:hover {
-            color: #5a67d8;
+            color: var(--accent-light);
             text-decoration: underline;
         }
     </style>
@@ -74,21 +82,24 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow-4 p-5">
+            <div class="card p-5">
                 <h2 class="text-center mb-4">Регистрация</h2>
                 <form th:action="@{/registration}" th:object="${user}" method="post">
+                    <!-- Логин -->
                     <div class="form-outline mb-4">
                         <input type="text" id="login" name="login" class="form-control" th:field="*{login}" />
                         <label class="form-label" for="login">Логин</label>
                         <div class="text-danger mt-1" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></div>
                     </div>
 
+                    <!-- Пароль -->
                     <div class="form-outline mb-4">
                         <input type="password" id="password" name="password" class="form-control" th:field="*{password}" />
                         <label class="form-label" for="password">Пароль</label>
                         <div class="text-danger mt-1" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                     </div>
 
+                    <!-- Кнопка -->
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary btn-block mb-4">Зарегистрироваться</button>
                     </div>
@@ -102,7 +113,7 @@
     </div>
 </div>
 
-<!-- MDB -->
+<!-- MDB JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
 </body>
 </html>

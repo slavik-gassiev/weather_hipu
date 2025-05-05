@@ -1,8 +1,7 @@
 package com.slava.сontrollers;
 
 import com.slava.entities.User;
-import com.slava.model.Coordinates;
-import com.slava.model.Weather;
+import com.slava.model.open_weather.Coordinates;
 import com.slava.model.imodel.IWeather;
 import com.slava.services.LocationService;
 import com.slava.services.SessionService;
@@ -11,7 +10,6 @@ import com.slava.services.WeatherService;
 import com.slava.validators.InvalidSessionException;
 import com.slava.validators.LocationAlreadyExistsException;
 import com.slava.validators.LocationDeletionException;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

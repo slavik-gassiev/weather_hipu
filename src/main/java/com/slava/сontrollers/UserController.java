@@ -2,7 +2,6 @@ package com.slava.сontrollers;
 
 import com.slava.entities.Location;
 import com.slava.entities.User;
-import com.slava.model.Weather;
 import com.slava.model.imodel.IWeather;
 import com.slava.services.LocationService;
 import com.slava.services.SessionService;

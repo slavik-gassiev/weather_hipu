@@ -1,8 +1,8 @@
 package com.slava.repositories;
 
-import com.slava.model.Coordinates;
-import com.slava.model.OpenWeatherAPI;
-import com.slava.model.Weather;
+import com.slava.model.open_weather.Coordinates;
+import com.slava.model.open_weather.OpenWeatherAPI;
+import com.slava.model.open_weather.Weather;
 import com.slava.validators.ServiceUnavailableException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,8 +1,10 @@
 package com.slava.config;
 
-import com.slava.model.Weather;
+import com.slava.model.crossing_weather.VCWeather;
+import com.slava.model.open_weather.Weather;
 import com.slava.model.weatherApi.WAWeather;
 import com.slava.repositories.IWeatherRepository;
+import com.slava.repositories.VCWeatherRepository;
 import com.slava.repositories.WeatherAPIRepository;
 import com.slava.repositories.WeatherRepository;
 import org.flywaydb.core.Flyway;
@@ -60,6 +62,13 @@ public class WebConfig implements WebMvcConfigurer {
     public Map<String, IWeatherRepository<WAWeather>> weatherAPIRepository(WeatherAPIRepository weatherAPIRepository) {
         return Map.of(
                 "WeatherAPIRepository", weatherAPIRepository
+        );
+    }
+
+    @Bean
+    public Map<String, IWeatherRepository<VCWeather>> weatherVCWeatherRepository(VCWeatherRepository vcWeatherRepository) {
+        return Map.of(
+                "VCWeatherRepository", vcWeatherRepository
         );
     }
 

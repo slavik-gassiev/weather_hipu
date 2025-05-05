@@ -4,7 +4,7 @@ package com.slava.services;
 import com.slava.config.TestConfig;
 import com.slava.entities.Location;
 import com.slava.entities.User;
-import com.slava.model.Coordinates;
+import com.slava.model.open_weather.Coordinates;
 import com.slava.repositories.ILocationRepository;
 import com.slava.repositories.IUserRepository;
 import jakarta.transaction.Transactional;

@@ -7,65 +7,68 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- Material Design Bootstrap CSS -->
+    <!-- MDBootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
 
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        :root{
+            /* спокойно-холодная палитра */
+            --bg-start: #4b5563;   /* slate 600 */
+            --bg-end:   #6b7280;   /* slate 500 */
+            --accent:   #374151;   /* slate 700 */
+            --accent-light:#4b5563;
         }
 
-        .card {
-            border-radius: 1rem;
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.85);
-            border: 2px solid #667eea;
-            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
-            animation: fadeInUp 1s ease-out;
+        body{
+            font-family:'Roboto',sans-serif;
+            background:linear-gradient(135deg,var(--bg-start) 0%,var(--bg-end) 100%);
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* карточка */
+        .card{
+            border-radius:1rem;
+            backdrop-filter:blur(8px);
+            background:rgba(255,255,255,.9);
+            border:1px solid var(--bg-end);
+            box-shadow:0 6px 12px rgba(0,0,0,.15);
+            animation:fadeInUp .8s ease-out;
+        }
+        @keyframes fadeInUp{
+            from{opacity:0;transform:translateY(40px)}
+            to{opacity:1;transform:translateY(0)}
         }
 
-        .form-outline .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        /* поля формы */
+        .form-outline .form-control:focus{
+            border-color:var(--accent);
+            box-shadow:0 0 0 .15rem rgba(59,66,82,.25);
         }
 
-        .btn-primary {
-            background-color: #667eea;
-            border-color: #667eea;
-            transition: all 0.3s ease;
+        /* кнопка */
+        .btn-primary{
+            background-color:var(--accent);
+            border-color:var(--accent);
+            transition:all .3s ease;
+        }
+        .btn-primary:hover{
+            background-color:var(--accent-light);
+            border-color:var(--accent-light);
+            transform:scale(1.03);
         }
 
-        .btn-primary:hover {
-            background-color: #5a67d8;
-            border-color: #5a67d8;
-            transform: scale(1.05);
+        /* ссылки */
+        a{
+            color:var(--accent);
+            text-decoration:none;
+            transition:color .2s;
         }
-
-        a {
-            color: #764ba2;
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: #5a67d8;
-            text-decoration: underline;
+        a:hover{
+            color:var(--accent-light);
+            text-decoration:underline;
         }
     </style>
 </head>
@@ -74,21 +77,31 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow-4 p-5">
+            <div class="card p-5">
                 <h2 class="text-center mb-4">Авторизация</h2>
+
                 <form th:action="@{/login}" th:object="${user}" method="post">
+                    <!-- Логин -->
                     <div class="form-outline mb-4">
-                        <input type="text" id="login" name="login" class="form-control" th:field="*{login}" />
+                        <input type="text" id="login" name="login"
+                               th:field="*{login}" class="form-control"/>
                         <label class="form-label" for="login">Логин</label>
-                        <div class="text-danger mt-1" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></div>
+                        <div class="text-danger mt-1"
+                             th:if="${#fields.hasErrors('login')}"
+                             th:errors="*{login}"></div>
                     </div>
 
+                    <!-- Пароль -->
                     <div class="form-outline mb-4">
-                        <input type="password" id="password" name="password" class="form-control" th:field="*{password}" />
+                        <input type="password" id="password" name="password"
+                               th:field="*{password}" class="form-control"/>
                         <label class="form-label" for="password">Пароль</label>
-                        <div class="text-danger mt-1" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                        <div class="text-danger mt-1"
+                             th:if="${#fields.hasErrors('password')}"
+                             th:errors="*{password}"></div>
                     </div>
 
+                    <!-- Кнопка -->
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary btn-block mb-4">Войти</button>
                     </div>
@@ -102,7 +115,6 @@
     </div>
 </div>
 
-<!-- MDB -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
 </body>
 </html>

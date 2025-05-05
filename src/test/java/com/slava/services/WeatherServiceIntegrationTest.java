@@ -2,8 +2,7 @@ package com.slava.services;
 
 import com.slava.config.TestConfig;
 import com.slava.entities.Location;
-import com.slava.model.OpenWeatherAPI;
-import com.slava.model.Weather;
+import com.slava.model.open_weather.OpenWeatherAPI;
 import com.slava.model.imodel.IWeather;
 import com.slava.validators.ServiceUnavailableException;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;

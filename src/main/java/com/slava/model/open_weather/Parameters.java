@@ -1,10 +1,8 @@
-package com.slava.model;
+package com.slava.model.open_weather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.slava.model.imodel.IParameters;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class Parameters implements IParameters {

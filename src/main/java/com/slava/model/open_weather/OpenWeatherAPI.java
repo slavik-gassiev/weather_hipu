@@ -1,6 +1,5 @@
-package com.slava.model;
+package com.slava.model.open_weather;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

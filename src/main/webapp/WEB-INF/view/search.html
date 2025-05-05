@@ -40,6 +40,11 @@
                                th:checked="${#lists.contains(selectedSources,'WeatherAPIRepository')}" id="api2">
                         <label class="form-check-label" for="api2">WeatherAPI</label>
                     </li>
+                    <li class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" name="sources" value="WeatherAPIRepository"
+                               th:checked="${#lists.contains(selectedSources,'VCWeatherRepository')}" id="api3">
+                        <label class="form-check-label" for="api2">VCWeatherAPI</label>
+                    </li>
                 </ul>
             </div>
 
@@ -68,7 +73,7 @@
     <!-- Результаты -->
     <div th:if="${resultsByApi!=null}">
         <div th:each="entry:${resultsByApi}">
-            <h3 class="text-white mb-4" th:text="'Результаты для API: '+${entry.key}"></h3>
+            <h3 class="text-dark mb-4" th:text="'Результаты для API: '+${entry.key}"></h3>
 
             <div class="row">
                 <div class="col-md-4 mb-4" th:each="weather:${entry.value}">
@@ -117,7 +122,7 @@
     </div>
 
     <p th:if="${resultsByApi==null || resultsByApi.isEmpty()}"
-       class="text-white fs-4 text-center">Ничего не найдено.</p>
+       class="text-black fs-4 text-center">Ничего не найдено.</p>
 </main>
 
 <!-- ─── Футер ─────────────────────────────────────── -->

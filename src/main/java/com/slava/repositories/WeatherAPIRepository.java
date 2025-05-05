@@ -1,7 +1,5 @@
 package com.slava.repositories;
 
-import com.slava.model.OpenWeatherAPI;
-import com.slava.model.Weather;
 import com.slava.model.weatherApi.WAWeather;
 import com.slava.model.weatherApi.WeatherAPI;
 import com.slava.model.weatherApi.WACoordinates;
@@ -46,7 +44,7 @@ public class WeatherAPIRepository implements IWeatherRepository<WAWeather>{
             if (e.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
                 throw new ServiceUnavailableException("Weather API is unavailable");
             }
-            throw e; // Проброс других ошибок
+            throw e;
         }
     }
 
