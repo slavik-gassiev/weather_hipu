@@ -2,46 +2,77 @@ package com.slava.model.crossing_weather;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.slava.model.imodel.IWeather;
+import com.slava.model.imodel.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 @Data
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VCWeather implements IWeather {
 
     private String name;
-    private final VCCoordinates coordinates = new VCCoordinates();
-    private final VCParameters  parameters  = new VCParameters();
-    private final VCWind        wind        = new VCWind();
+    private VCCoordinates coordinates;
+    private VCParameters parameters;
     private List<VCWeatherDetails> weatherDetails;
+    private VCWind wind;
 
-    /* --- маппинг корневых полей --- */
     @JsonProperty("resolvedAddress")
-    private void mapName(String n) {
-        this.name = n; coordinates.setName(n);
+    public void setResolvedAddress(String resolvedAddress) {
+        if (this.coordinates == null) {
+            this.coordinates = new VCCoordinates();
+        }
+        this.coordinates.setName(resolvedAddress);
+
+        // если это координаты — всё равно ставим name, как fallback
+        this.name = isCoordinateFormat(resolvedAddress) ? "Без названия" : resolvedAddress;
     }
 
+    // Хелпер для проверки формата "число,число"
+    private boolean isCoordinateFormat(String input) {
+        return input.matches("^-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?$");
+    }
+
+
     @JsonProperty("latitude")
-    private void mapLat(Double v) {
-        coordinates.setLat(v);
+    public void setLat(double lat) {
+        if (this.coordinates == null) this.coordinates = new VCCoordinates();
+        this.coordinates.setLat(lat);
     }
 
     @JsonProperty("longitude")
-    private void mapLon(Double v) {
-        coordinates.setLon(v);
+    public void setLon(double lon) {
+        if (this.coordinates == null) this.coordinates = new VCCoordinates();
+        this.coordinates.setLon(lon);
     }
 
-    /* --- маппинг currentConditions --- */
     @JsonProperty("currentConditions")
-    private void mapCurrent(VCCurrentRaw c){
-        parameters.setTemp(String.valueOf(c.getTemp()));
-        parameters.setHumidity(String.valueOf(c.getHumidity()));
-        wind.setSpeed(String.valueOf(c.getWindspeed()));
-        VCWeatherDetails det = new VCWeatherDetails();
-        det.setDescription(c.getConditions());
-        det.buildIcon(c.getIcon());
-        this.weatherDetails = List.of(det);
+    @SuppressWarnings("unchecked")
+    public void unpackCurrentConditions(Map<String, Object> current) {
+        this.parameters = new VCParameters();
+        this.parameters.setTemp(current.get("temp").toString());
+        this.parameters.setHumidity(current.get("humidity").toString());
+
+        this.wind = new VCWind();
+        this.wind.setSpeed(current.get("windspeed").toString());
+
+        VCWeatherDetails details = new VCWeatherDetails();
+
+        String iconCode = (String) current.get("icon");          // cloudy / clear-day …
+        if (iconCode != null) {
+            details.setMain(VCGroup.fromCode(iconCode));
+
+            details.setIcon(iconCode);
+        }
+
+        details.setDescription((String) current.get("conditions"));
+
+        this.weatherDetails = List.of(details);
     }
 }
+

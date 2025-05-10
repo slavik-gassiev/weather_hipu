@@ -5,6 +5,7 @@ import com.slava.model.crossing_weather.VCWeatherAPI;
 import com.slava.validators.ServiceUnavailableException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -43,7 +44,13 @@ public class VCWeatherRepository implements IWeatherRepository<VCWeather> {
 
             VCWeather weather = restTemplate.getForObject(urlencoded, VCWeather.class);
 
+            if (weather != null && (weather.getName() == null || weather.getName().isBlank())) {
+                // хоть что-то показываем пользователю
+                weather.setName(location);
+                weather.getCoordinates().setName(location);
+            }
             return Optional.ofNullable(weather);
+
         } catch (HttpServerErrorException e) {
             if (e.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
                 throw new ServiceUnavailableException("Visual Crossing API is unavailable");
@@ -66,6 +73,12 @@ public class VCWeatherRepository implements IWeatherRepository<VCWeather> {
                     .toUriString();
 
             VCWeather weather = restTemplate.getForObject(urlencoded, VCWeather.class);
+
+            if (weather != null && (weather.getName() == null || weather.getName().isBlank())) {
+                weather.setName(locationName);
+                weather.getCoordinates().setName(locationName);
+            }
+
 
             return List.of(Optional.ofNullable(weather));
         } catch (HttpServerErrorException e) {
